@@ -66,6 +66,8 @@ ln -s /Applications "$STAGE/Applications"
 cp "docs/guide/Cleanpasta-instalacja.pdf" "$STAGE/Jak zainstalować.pdf" 2>/dev/null || cp docs/instalacja.md "$STAGE/Jak zainstalowac.txt"
 rm -f "$DMG"
 hdiutil create -quiet -volname "Cleanpasta $VERSION" -srcfolder "$STAGE" -format UDZO -ov "$DMG"
+# A build lying around must not take over cleanpasta:// links from the installed app.
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$APP" 2>/dev/null || true
 echo "$APP"
 echo "$ZIP"
 echo "$DMG"
