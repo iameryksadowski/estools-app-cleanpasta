@@ -203,5 +203,5 @@ Wydanie: 1.1.0. Sprzątanie na Macu Eryka: stare rozszerzenie Raycasta (do Kosza
 - [x] F6b Skill AI (`clean-paste` wgrany na claude.ai, kopia w `eryksadowski-tools/skills`)
 - [x] F7 Przekazanie Maćkowi - DMG 1.0.0 z PDF "Jak zainstalować" oddany Erykowi (01.10)
 - [x] F8 Porządki ES Tools (`estools-docs` z historią brandu, Logo Export z historią z powrotem w swoim repo, rejestr nazw) - PR-y zmergowane
-- [ ] F10 Cleanpasta (zmiana nazwy, listy numerowane, Raycast z ustawień, skróty do usunięcia, porządek)
+- [x] F10 Cleanpasta (zmiana nazwy, listy numerowane, Raycast z ustawień, skróty do usunięcia, porządek) - 1.1.0, migracja z Clean Paste sprawdzona lokalnie
 - [ ] F9 Później
