@@ -10,12 +10,12 @@ import { join } from "node:path";
 const root = new URL("..", import.meta.url).pathname;
 const converter = join(root, "converter");
 const { cleanContent, cleanMarkdown, markdownBody } = await import(join(converter, "src/convert.ts"));
-const bin = join(root, ".build/debug/cleanpaste");
+const bin = join(root, ".build/debug/cleanpasta");
 const fixture = (name: string) => readFileSync(join(converter, "tests/fixtures", name), "utf8");
-const dir = mkdtempSync(join(tmpdir(), "cleanpaste-"));
+const dir = mkdtempSync(join(tmpdir(), "cleanpasta-"));
 
 function cli(args: string[], input?: string): string {
-  return execFileSync(bin, args, { input, encoding: "utf8", env: { ...process.env, CLEAN_PASTE_CONVERTER: join(root, "Resources/convert.js") } });
+  return execFileSync(bin, args, { input, encoding: "utf8", env: { ...process.env, CLEANPASTA_CONVERTER: join(root, "Resources/convert.js") } });
 }
 
 type Opts = { replaceDashes: boolean; replaceQuotes: boolean; fontSize: number };

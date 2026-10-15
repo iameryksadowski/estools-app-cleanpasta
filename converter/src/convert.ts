@@ -1,5 +1,5 @@
 /**
- * ES Tools Clean Paste - converter.
+ * ES Tools Cleanpasta - converter.
  *
  * Turns clipboard content into clean HTML that keeps the structure of the text
  * (bold, italic, underline, links, line breaks, non-breaking spaces, bulleted and

@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Clean Paste</string>
+	<string>Cleanpasta</string>
 	<key>CFBundleDisplayName</key>
-	<string>Clean Paste</string>
+	<string>Cleanpasta</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.eryksadowski.estools.cleanpaste</string>
 	<key>CFBundleExecutable</key>
-	<string>CleanPasteApp</string>
+	<string>CleanpastaApp</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundlePackageType</key>
@@ -32,15 +32,16 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>ES Tools Clean Paste</string>
+			<string>ES Tools Cleanpasta</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>cleanpasta</string>
 				<string>estools-clean-paste</string>
 			</array>
 		</dict>
 	</array>
 	<key>SUFeedURL</key>
-	<string>https://github.com/iameryksadowski/estools-app-clean-paste/releases/latest/download/appcast.xml</string>
+	<string>https://github.com/iameryksadowski/estools-app-cleanpasta/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>__SU_PUBLIC_ED_KEY__</string>
 	<key>SUEnableAutomaticChecks</key>

@@ -69,7 +69,7 @@ if let htmlFile {
     }
     pasteboard = NSPasteboard.general
   } else {
-    pasteboard = NSPasteboard(name: NSPasteboard.Name("tools.eryksadowski.clean-paste.lab"))
+    pasteboard = NSPasteboard(name: NSPasteboard.Name("tools.eryksadowski.cleanpasta.lab"))
   }
   pasteboard.clearContents()
   guard let html = try? String(contentsOfFile: htmlFile, encoding: .utf8) else { fail("cannot read \(htmlFile)") }

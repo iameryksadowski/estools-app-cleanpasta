@@ -1,6 +1,7 @@
 import AppKit
+import ServiceManagement
 import Combine
-import CleanPasteCore
+import CleanpastaCore
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var statusItem: NSStatusItem?
@@ -11,6 +12,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     lazy var settings = SettingsWindowController(updater: updater)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        if Migration.renameBundleIfNeeded() {
+            return // the renamed copy starts in a moment
+        }
+        Migration.afterRename()
         NSApp.mainMenu = MainMenu.build(target: self)
         AppIcon.apply()
         appearanceObservation = NSApp.observe(\.effectiveAppearance) { _, _ in
@@ -52,9 +57,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         return false
     }
 
-    // estools-clean-paste://paste, ://repair, ://settings, ://about (Raycast, scripts)
+    // cleanpasta://paste, ://repair, ://settings, ://about (Raycast, scripts)
     func application(_ application: NSApplication, open urls: [URL]) {
-        for url in urls where url.scheme == "estools-clean-paste" {
+        for url in urls where ["cleanpasta", "estools-clean-paste"].contains(url.scheme ?? "") { // the second one: links made before the rename
             switch url.host ?? url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/")) {
             case "paste": pasteClean(delay: 0.35) // let a launcher (Raycast) close and the target app come back
             case "repair": repairClipboard()
@@ -95,7 +100,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 if !pasted {
                     HUD.show(
                         title: "Clean text copied - press Cmd+V",
-                        detail: "Allow Clean Paste in Accessibility to paste automatically.",
+                        detail: "Allow Cleanpasta in Accessibility to paste automatically.",
                         symbol: "exclamationmark.triangle"
                     )
                 }
@@ -127,7 +132,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     static var versionTitle: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev"
-        return "Clean Paste \(version)"
+        return "Cleanpasta \(version)"
     }
 
     @objc func allowAccessibility() { Permissions.requestAccessibility() }
@@ -136,7 +141,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private func setUpStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        if let image = NSImage(named: "MenuBarIcon") ?? NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "Clean Paste") {
+        if let image = NSImage(named: "MenuBarIcon") ?? NSImage(systemSymbolName: "doc.on.clipboard", accessibilityDescription: "Cleanpasta") {
             image.isTemplate = true
             item.button?.image = image
         }
@@ -150,7 +155,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
         // One ES Tools icon in the menu bar; each tool is a section under it.
-        menu.addItem(.sectionHeader(title: "Clean Paste"))
+        menu.addItem(.sectionHeader(title: "Cleanpasta"))
         let paste = NSMenuItem(title: "Paste Clean", action: #selector(pasteCleanFromMenu), keyEquivalent: "")
         apply(preferences.pasteCleanShortcut, to: paste)
         paste.toolTip = "Clean the clipboard and paste it into the active app."
@@ -168,9 +173,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ","))
         menu.addItem(NSMenuItem(title: "Check for Updates...", action: #selector(checkForUpdates), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "About Clean Paste", action: #selector(showAbout), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "About Cleanpasta", action: #selector(showAbout), keyEquivalent: ""))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit Clean Paste", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit Cleanpasta", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         // the installed version, so an update is visible at a glance
         let version = NSMenuItem(title: AppDelegate.versionTitle, action: nil, keyEquivalent: "")
         version.isEnabled = false
@@ -190,7 +195,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 enum Permissions {
     static let accessibilityURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
 
-    /// Shows the system prompt (adds Clean Paste to the list) and opens the settings pane.
+    /// Shows the system prompt (adds Cleanpasta to the list) and opens the settings pane.
     static func requestAccessibility() {
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         if !AXIsProcessTrustedWithOptions(options) {
@@ -205,13 +210,13 @@ enum MainMenu {
         let main = NSMenu()
         let appItem = NSMenuItem()
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: "About Clean Paste", action: #selector(AppDelegate.showAbout), keyEquivalent: "").target = target
+        appMenu.addItem(withTitle: "About Cleanpasta", action: #selector(AppDelegate.showAbout), keyEquivalent: "").target = target
         appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "Settings...", action: #selector(AppDelegate.openSettings), keyEquivalent: ",").target = target
         appMenu.addItem(withTitle: "Check for Updates...", action: #selector(AppDelegate.checkForUpdates), keyEquivalent: "").target = target
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Hide Clean Paste", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        appMenu.addItem(withTitle: "Quit Clean Paste", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "Hide Cleanpasta", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: "Quit Cleanpasta", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appItem.submenu = appMenu
         main.addItem(appItem)
 
@@ -264,6 +269,58 @@ enum DockIcon {
         reasons.remove(reason)
         if reasons.isEmpty {
             NSApp.setActivationPolicy(.accessory)
+        }
+    }
+}
+
+/// From "Clean Paste" (1.0.x) to "Cleanpasta" (1.1.0). Sparkle installs the update under
+/// the old file name, so the app renames itself once and moves the rest along.
+enum Migration {
+    static let oldBundleName = "Clean Paste.app"
+    static let newBundleName = "Cleanpasta.app"
+
+    /// Renames "Clean Paste.app" to "Cleanpasta.app" next to it and relaunches from there.
+    /// Returns true when the renamed copy is starting and this process is about to quit.
+    static func renameBundleIfNeeded() -> Bool {
+        let current = Bundle.main.bundleURL
+        guard current.lastPathComponent == oldBundleName else { return false }
+        let target = current.deletingLastPathComponent().appendingPathComponent(newBundleName)
+        let fm = FileManager.default
+        guard !fm.fileExists(atPath: target.path) else { return false }
+        do {
+            try fm.moveItem(at: current, to: target)
+        } catch {
+            NSLog("Cleanpasta: could not rename the app: %@", error.localizedDescription)
+            return false
+        }
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.createsNewApplicationInstance = true
+        NSWorkspace.shared.openApplication(at: target, configuration: configuration) { _, _ in
+            DispatchQueue.main.async { NSApp.terminate(nil) }
+        }
+        return true
+    }
+
+    /// Once after the rename: the command line tool link and the login item follow the new name.
+    static func afterRename() {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: "migratedToCleanpasta") else { return }
+        defaults.set(true, forKey: "migratedToCleanpasta")
+        let fm = FileManager.default
+        var hadLink = false
+        for folder in CommandLineTool.candidateFolders {
+            let old = folder.appendingPathComponent("cleanpaste")
+            if let destination = try? fm.destinationOfSymbolicLink(atPath: old.path), destination.contains("/" + oldBundleName + "/") || destination.contains("/" + newBundleName + "/") {
+                try? fm.removeItem(at: old)
+                hadLink = true
+            }
+        }
+        if hadLink {
+            _ = CommandLineTool.install()
+        }
+        if SMAppService.mainApp.status == .enabled {
+            try? SMAppService.mainApp.unregister()
+            try? SMAppService.mainApp.register()
         }
     }
 }

@@ -19,6 +19,29 @@ struct ShortcutField: NSViewRepresentable {
     }
 }
 
+/// A shortcut field with a button that removes the shortcut (no shortcut is fine:
+/// the command still works from the menu bar icon).
+struct ShortcutRow: View {
+    @Binding var shortcut: Shortcut?
+
+    var body: some View {
+        HStack(spacing: 6) {
+            ShortcutField(shortcut: $shortcut).frame(width: 150, height: 24)
+            Button {
+                shortcut = nil
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+            .help("Remove the shortcut")
+            .opacity(shortcut == nil ? 0 : 1)
+            .disabled(shortcut == nil)
+            .accessibilityLabel("Remove the shortcut")
+        }
+    }
+}
+
 final class RecorderView: NSView {
     var onChange: ((Shortcut?) -> Void)?
     var shortcut: Shortcut? { didSet { needsDisplay = true } }

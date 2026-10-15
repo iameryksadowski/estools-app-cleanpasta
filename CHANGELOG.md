@@ -1,4 +1,19 @@
-# ES Tools Clean Paste (app) Changelog
+# ES Tools Cleanpasta Changelog
+
+Until 1.0.1 the app was called ES Tools Clean Paste.
+
+## [1.1.0] - 2026-10-15
+
+### Changed
+
+- **New name: Cleanpasta.** The app, its menu, the command line tool (`cleanpasta`), the links (`cleanpasta://`) and the repository (`estools-app-cleanpasta`) carry the new name. An installed Clean Paste updates in place: on the first launch it renames itself to Cleanpasta.app, moves the command line tool link and keeps the settings, shortcuts and the Accessibility permission. Old `estools-clean-paste://` links still work.
+- **Numbered points are pasted as plain paragraphs** ("1. ...") without an indent, with a blank line after each, so the numbering stays exactly as written. Only bullet points become a list, right below a line that ends with a colon. A greeting on the first line gets its own paragraph.
+- **Raycast** has its own section in Settings: turn on Raycast commands to add Paste Clean, Repair Clipboard, Settings and About to Raycast (one import step in Raycast); turn them off to see how to remove them.
+
+### Added
+
+- Every shortcut has a button that removes it; a command without a shortcut still works from the menu bar icon.
+- The cleaning logic now lives in this repository (`converter/`, with its unit tests and paste tests in the WebKit editor used by Apple Mail).
 
 ## [1.0.1] - 2026-10-01
 

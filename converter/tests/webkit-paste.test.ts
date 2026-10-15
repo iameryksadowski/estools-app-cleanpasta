@@ -33,7 +33,7 @@ function lab(): string {
 }
 
 function pasteIntoMail(result: CleanResult, mode: "paste" | "match" | "wk" = "paste"): string {
-  const dir = mkdtempSync(join(tmpdir(), "clean-paste-"));
+  const dir = mkdtempSync(join(tmpdir(), "cleanpasta-"));
   writeFileSync(join(dir, "in.html"), result.html);
   writeFileSync(join(dir, "in.txt"), result.text);
   return execFileSync(lab(), [mode, "--html", join(dir, "in.html"), "--text", join(dir, "in.txt")], {

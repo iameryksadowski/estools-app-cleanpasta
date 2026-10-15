@@ -28,7 +28,7 @@ final class Updater: NSObject, SPUUpdaterDelegate, SPUStandardUserDriverDelegate
         guard let controller else {
             let alert = NSAlert()
             alert.messageText = "Updates are not available in this build"
-            alert.informativeText = "Install Clean Paste from its release page to get updates."
+            alert.informativeText = "Install Cleanpasta from its release page to get updates."
             alert.runModal()
             return
         }

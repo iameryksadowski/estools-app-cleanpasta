@@ -1,4 +1,4 @@
-/* ES Tools Clean Paste converter - generated from converter/src/convert.ts (repo @63b9c1c) by scripts/build-converter.sh. Do not edit. */
+/* ES Tools Cleanpasta converter - generated from converter/src/convert.ts (repo @894cd81) by scripts/build-converter.sh. Do not edit. */
 (() => {
   // converter/node_modules/.pnpm/entities@8.1.0/node_modules/entities/dist/decode-codepoint.js
   var c1 = [
@@ -2655,6 +2655,6 @@
     return sanitizer.finish();
   }
 
-  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.2CNirKoT3N/entry.ts
-  globalThis.CleanPaste = { cleanContent, cleanMarkdown, markdownBody, DEFAULT_OPTIONS };
+  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.jDslHADSGW/entry.ts
+  globalThis.Cleanpasta = { cleanContent, cleanMarkdown, markdownBody, DEFAULT_OPTIONS };
 })();

@@ -37,5 +37,5 @@ fi
 openssl pkey -in "$OUT/sparkle-ed25519.pem" -pubout -outform DER | tail -c 32 | base64 > Resources/sparkle-public-key.txt
 echo "Sparkle public key: $(cat Resources/sparkle-public-key.txt) (Resources/sparkle-public-key.txt, commit it)"
 echo
-echo "Now add to 1Password (item \"ES Tools - Clean Paste signing\") and delete the local copies:"
+echo "Now add to 1Password (item \"ES Tools - Cleanpasta signing\") and delete the local copies:"
 ls -1 "$OUT"

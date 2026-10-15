@@ -25,7 +25,7 @@ public struct CleanResult: Equatable {
 }
 
 /// Runs the converter shared with the Raycast extension (Resources/convert.js, built
-/// from src/lib/convert.ts) in JavaScriptCore, so every ES Tools Clean Paste product
+/// from src/lib/convert.ts) in JavaScriptCore, so every ES Tools Cleanpasta product
 /// cleans text the same way.
 public final class Converter {
     public static let shared = Converter()
@@ -53,20 +53,20 @@ public final class Converter {
         } else {
             lastError = "convert.js not found"
         }
-        let api = context.objectForKeyedSubscript("CleanPaste")
+        let api = context.objectForKeyedSubscript("Cleanpasta")
         self.api = (api?.isObject ?? false) ? api : nil
         loadError = self.api == nil ? (lastError ?? "converter did not load") : nil
     }
 
     public var isReady: Bool { api != nil }
 
-    /// convert.js: CLEAN_PASTE_CONVERTER, the app's Resources, the Resources folder next
+    /// convert.js: CLEANPASTA_CONVERTER, the app's Resources, the Resources folder next
     /// to a helper binary (Contents/Helpers -> Contents/Resources), or the package
     /// sources during development.
     static func scriptURL() -> URL? {
         let fm = FileManager.default
         var candidates: [URL] = []
-        if let path = ProcessInfo.processInfo.environment["CLEAN_PASTE_CONVERTER"] {
+        if let path = ProcessInfo.processInfo.environment["CLEANPASTA_CONVERTER"] {
             candidates.append(URL(fileURLWithPath: path))
         }
         if let url = Bundle.main.url(forResource: "convert", withExtension: "js") {

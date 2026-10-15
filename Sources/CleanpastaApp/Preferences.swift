@@ -1,6 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
-import CleanPasteCore
+import CleanpastaCore
 
 /// A global keyboard shortcut: a key code plus modifiers, with the key's label for display.
 struct Shortcut: Codable, Equatable {

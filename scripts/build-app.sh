@@ -1,6 +1,6 @@
 #!/bin/sh
-# Builds dist/Clean Paste.app (menu bar app + cleanpaste CLI + Sparkle), signs it, and
-# packs dist/CleanPaste-VERSION.zip and dist/CleanPaste-VERSION.dmg.
+# Builds dist/Cleanpasta.app (menu bar app + cleanpasta CLI + Sparkle), signs it, and
+# packs dist/Cleanpasta-VERSION.zip and dist/Cleanpasta-VERSION.dmg.
 # Signing: the "ES Tools Code Signing" certificate when it is in the keychain
 # (scripts/setup-signing.sh), otherwise ad-hoc.
 set -eu
@@ -10,12 +10,12 @@ VERSION="${VERSION:-$(sed -n 's/^## \[\([0-9][0-9.]*\)\].*/\1/p' CHANGELOG.md | 
 BUILD="${BUILD:-$(git rev-list --count HEAD 2>/dev/null || echo 1)}"
 DIST="${DIST:-dist}"
 [ -n "$VERSION" ] || { echo "No version in CHANGELOG.md" >&2; exit 1; }
-APP="$DIST/Clean Paste.app"
+APP="$DIST/Cleanpasta.app"
 IDENTITY="ES Tools Code Signing"
 security find-certificate -c "$IDENTITY" >/dev/null 2>&1 || IDENTITY="-"
 PUBLIC_KEY="$(cat Resources/sparkle-public-key.txt 2>/dev/null || true)"
 
-echo "Building Clean Paste $VERSION ($BUILD)"
+echo "Building Cleanpasta $VERSION ($BUILD)"
 # Universal binaries (Apple silicon + Intel): build both slices and join them.
 # Each slice gets its own build folder: SPM cannot switch triples in one.
 for arch in arm64 x86_64; do
@@ -25,15 +25,15 @@ for arch in arm64 x86_64; do
   }
 done
 BIN="$(mktemp -d)"
-for tool in CleanPasteApp cleanpaste; do
+for tool in CleanpastaApp cleanpasta; do
   lipo -create .build/arm64/release/$tool .build/x86_64/release/$tool -output "$BIN/$tool"
 done
 
 rm -rf "$APP"
 mkdir -p "$DIST"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$APP/Contents/Helpers" "$APP/Contents/Frameworks"
-cp "$BIN/CleanPasteApp" "$APP/Contents/MacOS/CleanPasteApp"
-cp "$BIN/cleanpaste" "$APP/Contents/Helpers/cleanpaste"
+cp "$BIN/CleanpastaApp" "$APP/Contents/MacOS/CleanpastaApp"
+cp "$BIN/cleanpasta" "$APP/Contents/Helpers/cleanpasta"
 cp Resources/convert.js Resources/AppIcon.icns Resources/AppIcon-dark.png Resources/MenuBarIcon.png Resources/MenuBarIcon@2x.png Resources/ESToolsWordmark-dark.png Resources/ESToolsWordmark-light.png Resources/SadowskiWordmark-white.png "$APP/Contents/Resources/"
 sed -e "s/__VERSION__/$VERSION/" -e "s/__BUILD__/$BUILD/" -e "s|__SU_PUBLIC_ED_KEY__|$PUBLIC_KEY|" Resources/Info.plist > "$APP/Contents/Info.plist"
 if [ -z "$PUBLIC_KEY" ]; then
@@ -49,23 +49,23 @@ sign() { codesign --force --timestamp=none --sign "$IDENTITY" "$@"; }
 sign "$APP/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
 sign "$APP/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate"
 sign "$APP/Contents/Frameworks/Sparkle.framework"
-sign --identifier com.eryksadowski.estools.cleanpaste.cli "$APP/Contents/Helpers/cleanpaste"
+sign --identifier com.eryksadowski.estools.cleanpaste.cli "$APP/Contents/Helpers/cleanpasta"
 sign "$APP"
 codesign --verify --deep --strict "$APP"
 echo "Signed with: $IDENTITY"
 
-ZIP="$DIST/CleanPaste-$VERSION.zip"
+ZIP="$DIST/Cleanpasta-$VERSION.zip"
 rm -f "$ZIP"
 ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
 
-DMG="$DIST/CleanPaste-$VERSION.dmg"
-STAGE="$(mktemp -d)/Clean Paste"
+DMG="$DIST/Cleanpasta-$VERSION.dmg"
+STAGE="$(mktemp -d)/Cleanpasta"
 mkdir -p "$STAGE"
-ditto "$APP" "$STAGE/Clean Paste.app"
+ditto "$APP" "$STAGE/Cleanpasta.app"
 ln -s /Applications "$STAGE/Applications"
-cp "docs/guide/Clean-Paste-instalacja.pdf" "$STAGE/Jak zainstalować.pdf" 2>/dev/null || cp docs/instalacja.md "$STAGE/Jak zainstalowac.txt"
+cp "docs/guide/Cleanpasta-instalacja.pdf" "$STAGE/Jak zainstalować.pdf" 2>/dev/null || cp docs/instalacja.md "$STAGE/Jak zainstalowac.txt"
 rm -f "$DMG"
-hdiutil create -quiet -volname "Clean Paste $VERSION" -srcfolder "$STAGE" -format UDZO -ov "$DMG"
+hdiutil create -quiet -volname "Cleanpasta $VERSION" -srcfolder "$STAGE" -format UDZO -ov "$DMG"
 echo "$APP"
 echo "$ZIP"
 echo "$DMG"

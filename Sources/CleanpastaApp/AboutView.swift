@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// "About Clean Paste": the tool, ES Tools, the author and the version, in one window.
+/// "About Cleanpasta": the tool, ES Tools, the author and the version, in one window.
 final class AboutWindowController: NSObject, NSWindowDelegate {
     private var window: NSWindow?
     private let updater: Updater
@@ -15,7 +15,7 @@ final class AboutWindowController: NSObject, NSWindowDelegate {
         if window == nil {
             let hosting = NSHostingController(rootView: AboutView(updater: updater))
             let window = NSWindow(contentViewController: hosting)
-            window.title = "About Clean Paste"
+            window.title = "About Cleanpasta"
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
             window.delegate = self
@@ -33,9 +33,9 @@ final class AboutWindowController: NSObject, NSWindowDelegate {
 
 enum Links {
     static let website = URL(string: "https://eryksadowski.com")!
-    static let repository = URL(string: "https://github.com/iameryksadowski/estools-app-clean-paste")!
-    static let releases = URL(string: "https://github.com/iameryksadowski/estools-app-clean-paste/releases")!
-    static let license = URL(string: "https://github.com/iameryksadowski/estools-app-clean-paste/blob/main/LICENSE")!
+    static let repository = URL(string: "https://github.com/iameryksadowski/estools-app-cleanpasta")!
+    static let releases = URL(string: "https://github.com/iameryksadowski/estools-app-cleanpasta/releases")!
+    static let license = URL(string: "https://github.com/iameryksadowski/estools-app-cleanpasta/blob/main/LICENSE")!
     static let email = URL(string: "mailto:iam@eryksadowski.com?subject=Clean%20Paste")!
 }
 
@@ -59,7 +59,7 @@ struct AboutView: View {
                 Image(nsImage: NSApp.applicationIconImage)
                     .resizable()
                     .frame(width: 96, height: 96)
-                Text("ES Tools Clean Paste")
+                Text("ES Tools Cleanpasta")
                     .font(.system(size: 20, weight: .semibold))
                 Text("Version \(version) (\(build))")
                     .font(.system(.callout, design: .monospaced))

@@ -17,7 +17,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         if window == nil {
             let hosting = NSHostingController(rootView: SettingsView(updater: updater))
             let window = NSWindow(contentViewController: hosting)
-            window.title = "Clean Paste"
+            window.title = "Cleanpasta"
             window.styleMask = [.titled, .closable, .miniaturizable]
             window.isReleasedWhenClosed = false
             window.delegate = self
@@ -43,6 +43,7 @@ struct SettingsView: View {
     @State private var autoUpdates = false
     @State private var cliStatus = CommandLineTool.status()
     @State private var raycastNote: String?
+    @AppStorage("raycastEnabled") private var raycastEnabled = false
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var version: String {
@@ -58,7 +59,7 @@ struct SettingsView: View {
                         .resizable()
                         .frame(width: 56, height: 56)
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Clean Paste").font(.title2.weight(.semibold))
+                        Text("Cleanpasta").font(.title2.weight(.semibold))
                         Text("Paste formatted text without backgrounds, colors and fonts. Bold, lists, links and line breaks stay.")
                             .font(.callout)
                             .foregroundStyle(.secondary)
@@ -73,7 +74,7 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Label("One step left: allow Accessibility", systemImage: "hand.raised")
                             .font(.headline)
-                        Text("Clean Paste presses Cmd+V for you, and macOS asks for your permission. Click the button, turn on Clean Paste in the list and come back here. After an update, if Clean Paste is already on, turn it off and on again.")
+                        Text("Cleanpasta presses Cmd+V for you, and macOS asks for your permission. Click the button, turn on Cleanpasta in the list and come back here. After an update, if Cleanpasta is already on, turn it off and on again.")
                             .font(.callout)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
@@ -87,13 +88,13 @@ struct SettingsView: View {
 
             Section {
                 LabeledContent {
-                    ShortcutField(shortcut: $preferences.pasteCleanShortcut).frame(width: 150, height: 24)
+                    ShortcutRow(shortcut: $preferences.pasteCleanShortcut)
                 } label: {
                     Text("Paste Clean")
                     Text("Cleans the clipboard and pastes it into the app you are in.")
                 }
                 LabeledContent {
-                    ShortcutField(shortcut: $preferences.repairShortcut).frame(width: 150, height: 24)
+                    ShortcutRow(shortcut: $preferences.repairShortcut)
                 } label: {
                     Text("Repair Clipboard")
                     Text("Keeps the text and removes backgrounds, colors and fonts. Then paste with Cmd+V yourself.")
@@ -106,7 +107,7 @@ struct SettingsView: View {
             } header: {
                 Text("Shortcuts")
             } footer: {
-                Text("Click a field and press the keys. Delete clears it. Both commands are also in the menu bar icon.")
+                Text("Click a field and press the keys. The x removes a shortcut - both commands always work from the menu bar icon, with or without one.")
                     .foregroundStyle(.secondary)
             }
 
@@ -149,19 +150,37 @@ struct SettingsView: View {
                     }
                 } label: {
                     Text("Command line tool")
-                    Text(cliStatus.note ?? "cleanpaste for Terminal, scripts and AI assistants. See cleanpaste --help.")
+                    Text(cliStatus.note ?? "cleanpasta for Terminal, scripts and AI assistants. See cleanpasta --help.")
                 }
-                LabeledContent {
-                    Button("Add to Raycast") {
-                        raycastNote = RaycastIntegration.install()
+            }
+
+            Section {
+                if RaycastIntegration.isInstalled {
+                    Toggle(isOn: $raycastEnabled) {
+                        Text("Raycast commands")
+                        Text("Paste Clean, Repair Clipboard, Settings and About as commands in Raycast, so you can run them from Raycast or give them Raycast hotkeys.")
                     }
-                    .disabled(!RaycastIntegration.isInstalled)
-                } label: {
-                    Text("Raycast")
-                    Text(raycastNote ?? (RaycastIntegration.isInstalled
-                        ? "Paste Clean, Repair Clipboard and Settings as Raycast commands; give them Raycast hotkeys if you like."
-                        : "Raycast is not installed."))
+                    .onChange(of: raycastEnabled) { _, enabled in
+                        raycastNote = enabled ? RaycastIntegration.enable() : RaycastIntegration.disable()
+                    }
+                    if let raycastNote {
+                        Text(raycastNote)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .textSelection(.enabled)
+                    }
+                } else {
+                    LabeledContent("Raycast commands") {
+                        Text("Raycast is not installed").foregroundStyle(.secondary)
+                    }
                 }
+            } header: {
+                Text("Raycast")
+            } footer: {
+                Text("Other launchers and scripts can use the links cleanpasta://paste, cleanpasta://repair, cleanpasta://settings and cleanpasta://about.")
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
             }
 
             Section("Updates") {
@@ -221,7 +240,7 @@ struct SettingsView: View {
     }
 }
 
-/// Links Contents/Helpers/cleanpaste into a folder on the PATH, without an admin password.
+/// Links Contents/Helpers/cleanpasta into a folder on the PATH, without an admin password.
 enum CommandLineTool {
     struct Status {
         var installed: Bool
@@ -229,7 +248,12 @@ enum CommandLineTool {
         var note: String?
     }
 
-    static var helper: URL { Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/cleanpaste") }
+    static var helper: URL { Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/cleanpasta") }
+
+    static var candidateFolders: [URL] {
+        ["/opt/homebrew/bin", "/usr/local/bin"].map { URL(fileURLWithPath: $0) }
+            + [FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".local/bin")]
+    }
 
     /// Homebrew's folder is on the PATH and writable without a password; ~/.local/bin otherwise.
     static var targetFolder: URL {
@@ -241,7 +265,7 @@ enum CommandLineTool {
     }
 
     static func status() -> Status {
-        let link = targetFolder.appendingPathComponent("cleanpaste")
+        let link = targetFolder.appendingPathComponent("cleanpasta")
         let destination = try? FileManager.default.destinationOfSymbolicLink(atPath: link.path)
         return Status(installed: destination == helper.path, path: link.path.replacingOccurrences(of: NSHomeDirectory(), with: "~"))
     }
@@ -252,7 +276,7 @@ enum CommandLineTool {
             return Status(installed: false, path: "", note: "The command line tool is missing from this build.")
         }
         let folder = targetFolder
-        let link = folder.appendingPathComponent("cleanpaste")
+        let link = folder.appendingPathComponent("cleanpasta")
         do {
             try fm.createDirectory(at: folder, withIntermediateDirectories: true)
             if (try? fm.destinationOfSymbolicLink(atPath: link.path)) != nil || fm.fileExists(atPath: link.path) {
@@ -264,31 +288,32 @@ enum CommandLineTool {
         }
         var result = status()
         if folder.path.hasSuffix("/.local/bin") {
-            result.note = "Installed. Add ~/.local/bin to your PATH to use cleanpaste in Terminal."
+            result.note = "Installed. Add ~/.local/bin to your PATH to use cleanpasta in Terminal."
         }
         return result
     }
 }
 
-/// Raycast Quicklinks that call Clean Paste through its links (estools-clean-paste://...).
-/// Raycast imports them from a JSON file with its Import Quicklinks command.
+/// Raycast commands = Raycast Quicklinks that call Cleanpasta through its links
+/// (cleanpasta://...). Raycast has no public way to add them from outside, so Cleanpasta
+/// writes a file for Raycast's Import Quicklinks command and opens Raycast.
 enum RaycastIntegration {
     static var raycastURL: URL? { NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.raycast.macos") }
     static var isInstalled: Bool { raycastURL != nil }
 
     static let quicklinks: [[String: String]] = [
-        ["name": "Clean Paste: Paste Clean", "link": "estools-clean-paste://paste"],
-        ["name": "Clean Paste: Repair Clipboard", "link": "estools-clean-paste://repair"],
-        ["name": "Clean Paste: Settings", "link": "estools-clean-paste://settings"],
-        ["name": "Clean Paste: About", "link": "estools-clean-paste://about"],
+        ["name": "Cleanpasta: Paste Clean", "link": "cleanpasta://paste"],
+        ["name": "Cleanpasta: Repair Clipboard", "link": "cleanpasta://repair"],
+        ["name": "Cleanpasta: Settings", "link": "cleanpasta://settings"],
+        ["name": "Cleanpasta: About", "link": "cleanpasta://about"],
     ]
 
     static var fileURL: URL {
-        FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0].appendingPathComponent("Clean Paste for Raycast.json")
+        FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0].appendingPathComponent("Cleanpasta for Raycast.json")
     }
 
     /// Writes the import file to Downloads, opens Raycast and returns the next steps.
-    static func install() -> String {
+    static func enable() -> String {
         do {
             let data = try JSONSerialization.data(withJSONObject: quicklinks, options: [.prettyPrinted, .withoutEscapingSlashes])
             try data.write(to: fileURL, options: .atomic)
@@ -298,6 +323,12 @@ enum RaycastIntegration {
         if let raycastURL {
             NSWorkspace.shared.openApplication(at: raycastURL, configuration: NSWorkspace.OpenConfiguration())
         }
-        return "Almost done: in Raycast type Import Quicklinks, press Return and choose \"Clean Paste for Raycast.json\" in Downloads. Hotkeys: Raycast Settings > Extensions > Quicklinks."
+        return "One step in Raycast: type Import Quicklinks, press Return and pick \"Cleanpasta for Raycast.json\" in Downloads. The commands start with \"Cleanpasta:\". Hotkeys for them: Raycast Settings > Extensions > Quicklinks."
+    }
+
+    /// Removes the import file and returns how to remove the commands from Raycast.
+    static func disable() -> String {
+        try? FileManager.default.removeItem(at: fileURL)
+        return "To remove the commands: in Raycast type Search Quicklinks, select a \"Cleanpasta:\" command, press Cmd+K and choose Delete Quicklink; repeat for each of them."
     }
 }

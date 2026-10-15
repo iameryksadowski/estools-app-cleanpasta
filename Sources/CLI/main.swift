@@ -1,20 +1,20 @@
 import AppKit
-import CleanPasteCore
+import CleanpastaCore
 
-// cleanpaste - the ES Tools Clean Paste command line tool. Same cleaning as the app
+// cleanpasta - the ES Tools Cleanpasta command line tool. Same cleaning as the app
 // and the Raycast extension; meant for people, scripts and AI assistants.
 
-let version = "1.0.1"
+let version = "1.1.0"
 
 let usage = """
-cleanpaste \(version) - ES Tools Clean Paste
+cleanpasta \(version) - ES Tools Cleanpasta
 
 Cleans formatted text: keeps bold, italic, links, lists, line breaks and non-breaking
 spaces; drops backgrounds, colors and fonts; turns Markdown into formatted text and
 typographic dashes and quotes into keyboard characters.
 
 Usage:
-  cleanpaste [FILE] [options]
+  cleanpasta [FILE] [options]
 
 Input: FILE, or standard input when piped, or the clipboard.
   --markdown          read the input as Markdown (default for .md files)
@@ -41,13 +41,13 @@ Options:
 Exit codes: 0 done, 1 usage or read error, 2 nothing to clean, 3 no Accessibility access.
 
 Examples:
-  cleanpaste draft.md --body --copy       mail draft to the clipboard, ready for Cmd+V
-  pbpaste | cleanpaste --text --print text
-  cleanpaste --repair                     fix the clipboard, then paste anywhere
+  cleanpasta draft.md --body --copy       mail draft to the clipboard, ready for Cmd+V
+  pbpaste | cleanpasta --text --print text
+  cleanpasta --repair                     fix the clipboard, then paste anywhere
 """
 
 func fail(_ message: String, code: Int32 = 1) -> Never {
-    FileHandle.standardError.write(Data("cleanpaste: \(message)\n".utf8))
+    FileHandle.standardError.write(Data("cleanpasta: \(message)\n".utf8))
     exit(code)
 }
 
