@@ -1,5 +1,5 @@
 // The app and the CLI run convert.js in JavaScriptCore; this test checks that they give
-// exactly the same result as the TypeScript source in Node (the Raycast extension's tests).
+// exactly the same result as the TypeScript source in Node (converter/tests).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -8,10 +8,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
-const extension = process.env.CLEAN_PASTE_EXTENSION ?? join(root, "../estools-plugin-raycast-clean-paste");
-const { cleanContent, cleanMarkdown, markdownBody } = await import(join(extension, "src/lib/convert.ts"));
+const converter = join(root, "converter");
+const { cleanContent, cleanMarkdown, markdownBody } = await import(join(converter, "src/convert.ts"));
 const bin = join(root, ".build/debug/cleanpaste");
-const fixture = (name: string) => readFileSync(join(extension, "tests/fixtures", name), "utf8");
+const fixture = (name: string) => readFileSync(join(converter, "tests/fixtures", name), "utf8");
 const dir = mkdtempSync(join(tmpdir(), "cleanpaste-"));
 
 function cli(args: string[], input?: string): string {

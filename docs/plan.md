@@ -174,6 +174,23 @@ Każda faza kończy się commitem na `development` i spełnionymi kryteriami odb
 3. Domyślny skrót Paste Clean ⌃⌥⌘V.
 4. Polska lokalizacja interfejsu.
 
+## 6a. F10 - Cleanpasta (15.10.2026)
+
+Eryk: cała apka nazywa się "Cleanpasta", aktualizacja ma przenieść istniejące instalacje; numerowane punkty wklejamy jako tekst; Raycast włączany z ustawień; skróty można usunąć; porządek na Macu.
+
+| # | Decyzja | Dlaczego |
+|---|---|---|
+| R1 | Nazwa wszędzie: apka "Cleanpasta" (produkt "ES Tools Cleanpasta"), plik `Cleanpasta.app`, CLI `cleanpasta`, link `cleanpasta://`, repo `estools-app-cleanpasta`, skill `cleanpasta` | jedna nazwa produktu od A do Z |
+| R2 | Identyfikator pakietu bez zmian (`com.eryksadowski.estools.cleanpaste`), stary link `estools-clean-paste://` nadal działa | Sparkle podmienia apkę tylko przy tym samym identyfikatorze; zostają Dostępność, ustawienia i skróty; stare Quicklinki w Raycaście dalej działają |
+| R3 | Po aktualizacji apka sama zmienia nazwę pliku z `Clean Paste.app` na `Cleanpasta.app` i przepina link CLI | Sparkle zostawia starą nazwę pliku |
+| R4 | GitHub przekierowuje stare adresy po zmianie nazwy repo, więc zainstalowane 1.0.x znajdą aktualizację; nowa wersja ma już nowy adres appcastu | brak ręcznej reinstalacji u prezesa |
+| R5 | Konwerter (`convert.ts`, testy, fixture'y, lab WebKit) przenosi się do repo apki (`converter/`, pnpm); rozszerzenie Raycasta zostaje zarchiwizowane | jeden produkt, jedno źródło logiki |
+| R6 | Listy numerowane wklejamy jako zwykłe linie tekstu "1. ...", bez wcięcia; tylko listy punktowane są listami | numeracja w mailach się nie rozjeżdża, tekst wygląda jak wpisany ręcznie (przykład: wycena dla Hadat) |
+| R7 | Raycast w ustawieniach: sekcja z przyciskiem dodania komend (Quicklinki z importu), statusem i instrukcją usunięcia; żadnej osobnej wtyczki do instalowania | Raycast nie pozwala dodać komend inaczej bez sklepu Raycast |
+| R8 | Każdy skrót ma przycisk usunięcia; brak skrótu jest poprawnym stanem | Eryk: "trzeba móc usunąć i nie ustawiać żadnego" |
+
+Wydanie: 1.1.0. Sprzątanie na Macu Eryka: stare rozszerzenie Raycasta (do Kosza), stary link `cleanpaste`, plik importu w Pobranych, stary skill `clean-paste` na claude.ai wyłączony.
+
 ## 7. Status (01.10.2026)
 
 - [x] F0 Plan
@@ -186,4 +203,5 @@ Każda faza kończy się commitem na `development` i spełnionymi kryteriami odb
 - [x] F6b Skill AI (`clean-paste` wgrany na claude.ai, kopia w `eryksadowski-tools/skills`)
 - [x] F7 Przekazanie Maćkowi - DMG 1.0.0 z PDF "Jak zainstalować" oddany Erykowi (01.10)
 - [x] F8 Porządki ES Tools (`estools-docs` z historią brandu, Logo Export z historią z powrotem w swoim repo, rejestr nazw) - PR-y zmergowane
+- [ ] F10 Cleanpasta (zmiana nazwy, listy numerowane, Raycast z ustawień, skróty do usunięcia, porządek)
 - [ ] F9 Później
