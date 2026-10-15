@@ -142,32 +142,82 @@ function showsMarkdownSource(blocks: Block[]): boolean {
 
 // --- output -------------------------------------------------------------------------
 
-// Lists exactly as Apple Mail writes them when you format a message by hand:
-// <div><ul class="MailOutline"><li>...</li></ul></div>.
+/** "1. text" lines of a numbered list (numbered lists are pasted as plain text lines). */
+function numberedLines(list: List): string[] {
+  return list.items.map((item, index) => `${list.start + index}. ${item.html}`);
+}
+
+// Bulleted lists exactly as Apple Mail writes them when you format a message by hand:
+// <div><ul class="MailOutline"><li>...</li></ul></div>. A numbered list nested in a
+// bullet stays as "1. ..." lines inside that bullet.
 function renderList(list: List): string {
-  const start = list.tag === "ol" && list.start !== 1 ? ` start="${list.start}"` : "";
-  const items = list.items.map((item) => `<li>${item.html}${item.lists.map(renderList).join("")}</li>`).join("");
-  return `<${list.tag} class="MailOutline"${start}>${items}</${list.tag}>`;
+  const items = list.items
+    .map((item) => {
+      const nested = item.lists
+        .map((sub) => (sub.tag === "ol" ? `<br>${numberedLines(sub).join("<br>")}` : renderList(sub)))
+        .join("");
+      return `<li>${item.html}${nested}</li>`;
+    })
+    .join("");
+  return `<ul class="MailOutline">${items}</ul>`;
 }
 
 /**
  * Mail's own markup: one <div> per line, an empty <div><br></div> as the blank line,
  * lists and tables inside a <div>; with a font size, every <div> carries it.
+ *
+ * Numbered lists are not Mail lists: each item is a plain "1. ..." line without an
+ * indent, so the numbers stay exactly as written even when bullet lists, notes or blank
+ * lines come between the items. Only bulleted lists become real (indented) lists.
  */
 function render(blocks: Block[], options: Options): string {
   const size = options.fontSize && options.fontSize > 0 ? Math.round(options.fontSize) : 0;
   const div = size ? `<div style="font-size: ${size}px;">` : "<div>";
-  return blocks
-    .map((block) => {
-      if (block.kind === "p") {
-        return `${div}${block.html}</div>`;
+  // Each unit is one paragraph, line or bullet list; units are separated by a blank line,
+  // except a bullet list that introduces itself with a line ending in ":" - it sits right
+  // below that line, as people format it by hand.
+  type Unit = { html: string; bullets: boolean; leadIn: boolean; glued?: boolean };
+  const units: Unit[] = [];
+  const leadIn = (html: string) => /:\s*$/.test(htmlToText(html));
+  const bullets = (list: List, glued = false): Unit => ({
+    html: `${div}${renderList(list)}</div>`,
+    bullets: true,
+    leadIn: false,
+    glued,
+  });
+  const numbered = (list: List): void => {
+    list.items.forEach((item, index) => {
+      units.push({ html: `${div}${list.start + index}. ${item.html}</div>`, bullets: false, leadIn: leadIn(item.html) });
+      for (const sub of item.lists) {
+        if (sub.tag === "ol") {
+          numbered(sub);
+        } else {
+          units.push(bullets(sub, true)); // bullets of a numbered point go right below it
+        }
       }
-      if (block.kind === "table") {
-        return size ? `${div}${block.html}</div>` : block.html;
+    });
+  };
+  for (const block of blocks) {
+    if (block.kind === "p") {
+      units.push({ html: `${div}${block.html}</div>`, bullets: false, leadIn: leadIn(block.html) });
+    } else if (block.kind === "table") {
+      units.push({ html: size ? `${div}${block.html}</div>` : block.html, bullets: false, leadIn: false });
+    } else if (block.list.tag === "ol") {
+      numbered(block.list);
+    } else {
+      units.push(bullets(block.list));
+    }
+  }
+  return units
+    .map((unit, index) => {
+      const previous = units[index - 1];
+      if (!previous) {
+        return unit.html;
       }
-      return `${div}${renderList(block.list)}</div>`;
+      const glue = unit.glued || (unit.bullets && previous.leadIn);
+      return (glue ? "" : `${div}<br></div>`) + unit.html;
     })
-    .join(`${div}<br></div>`);
+    .join("");
 }
 
 function htmlToText(fragment: string): string {
@@ -247,12 +297,21 @@ function newList(marker: string): List {
   return { tag: ordered ? "ol" : "ul", start: ordered ? parseInt(marker, 10) : 1, items: [] };
 }
 
+// A short first line ending in "," or "!" (no other sentence on it): a greeting.
+const GREETING_LINE = /^[^.?!:,]{1,40}[,!]$/;
+
 function markdownToBlocks(markdown: string, options: Options): Block[] {
   const blocks: Block[] = [];
   const paragraph: string[] = [];
   let stack: { indent: number; list: List }[] = [];
 
   const closeParagraph = () => {
+    // A greeting ("Hi Anna,", "Dzień dobry!") on its own first line is a paragraph of its
+    // own, even without a blank line after it - that is how a mail is laid out.
+    if (paragraph.length > 1 && GREETING_LINE.test(paragraph[0].trim())) {
+      blocks.push({ kind: "p", html: inlineMarkdown(paragraph[0].trim(), options) });
+      paragraph.shift();
+    }
     if (paragraph.length > 0) {
       blocks.push({ kind: "p", html: paragraph.map((line) => inlineMarkdown(line.trim(), options)).join("<br>") });
       paragraph.length = 0;

@@ -1,4 +1,4 @@
-/* ES Tools Clean Paste converter - generated from converter/src/convert.ts (repo @913f98b) by scripts/build-converter.sh. Do not edit. */
+/* ES Tools Clean Paste converter - generated from converter/src/convert.ts (repo @63b9c1c) by scripts/build-converter.sh. Do not edit. */
 (() => {
   // converter/node_modules/.pnpm/entities@8.1.0/node_modules/entities/dist/decode-codepoint.js
   var c1 = [
@@ -2242,23 +2242,58 @@
     }
     return !blocks.some((block) => block.kind !== "p" || /<(b|i|u|a)[\s>]/.test(block.html));
   }
+  function numberedLines(list) {
+    return list.items.map((item, index) => `${list.start + index}. ${item.html}`);
+  }
   function renderList(list) {
-    const start = list.tag === "ol" && list.start !== 1 ? ` start="${list.start}"` : "";
-    const items = list.items.map((item) => `<li>${item.html}${item.lists.map(renderList).join("")}</li>`).join("");
-    return `<${list.tag} class="MailOutline"${start}>${items}</${list.tag}>`;
+    const items = list.items.map((item) => {
+      const nested = item.lists.map((sub) => sub.tag === "ol" ? `<br>${numberedLines(sub).join("<br>")}` : renderList(sub)).join("");
+      return `<li>${item.html}${nested}</li>`;
+    }).join("");
+    return `<ul class="MailOutline">${items}</ul>`;
   }
   function render(blocks, options) {
     const size = options.fontSize && options.fontSize > 0 ? Math.round(options.fontSize) : 0;
     const div = size ? `<div style="font-size: ${size}px;">` : "<div>";
-    return blocks.map((block) => {
+    const units = [];
+    const leadIn = (html) => /:\s*$/.test(htmlToText(html));
+    const bullets = (list, glued = false) => ({
+      html: `${div}${renderList(list)}</div>`,
+      bullets: true,
+      leadIn: false,
+      glued
+    });
+    const numbered = (list) => {
+      list.items.forEach((item, index) => {
+        units.push({ html: `${div}${list.start + index}. ${item.html}</div>`, bullets: false, leadIn: leadIn(item.html) });
+        for (const sub of item.lists) {
+          if (sub.tag === "ol") {
+            numbered(sub);
+          } else {
+            units.push(bullets(sub, true));
+          }
+        }
+      });
+    };
+    for (const block of blocks) {
       if (block.kind === "p") {
-        return `${div}${block.html}</div>`;
+        units.push({ html: `${div}${block.html}</div>`, bullets: false, leadIn: leadIn(block.html) });
+      } else if (block.kind === "table") {
+        units.push({ html: size ? `${div}${block.html}</div>` : block.html, bullets: false, leadIn: false });
+      } else if (block.list.tag === "ol") {
+        numbered(block.list);
+      } else {
+        units.push(bullets(block.list));
       }
-      if (block.kind === "table") {
-        return size ? `${div}${block.html}</div>` : block.html;
+    }
+    return units.map((unit, index) => {
+      const previous = units[index - 1];
+      if (!previous) {
+        return unit.html;
       }
-      return `${div}${renderList(block.list)}</div>`;
-    }).join(`${div}<br></div>`);
+      const glue = unit.glued || unit.bullets && previous.leadIn;
+      return (glue ? "" : `${div}<br></div>`) + unit.html;
+    }).join("");
   }
   function htmlToText(fragment) {
     return decodeEntities(fragment.replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, ""));
@@ -2315,11 +2350,16 @@
     const ordered = /^\d/.test(marker);
     return { tag: ordered ? "ol" : "ul", start: ordered ? parseInt(marker, 10) : 1, items: [] };
   }
+  var GREETING_LINE = /^[^.?!:,]{1,40}[,!]$/;
   function markdownToBlocks(markdown, options) {
     const blocks = [];
     const paragraph = [];
     let stack = [];
     const closeParagraph = () => {
+      if (paragraph.length > 1 && GREETING_LINE.test(paragraph[0].trim())) {
+        blocks.push({ kind: "p", html: inlineMarkdown(paragraph[0].trim(), options) });
+        paragraph.shift();
+      }
       if (paragraph.length > 0) {
         blocks.push({ kind: "p", html: paragraph.map((line) => inlineMarkdown(line.trim(), options)).join("<br>") });
         paragraph.length = 0;
@@ -2615,6 +2655,6 @@
     return sanitizer.finish();
   }
 
-  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.YvMRSsDR8Q/entry.ts
+  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.2CNirKoT3N/entry.ts
   globalThis.CleanPaste = { cleanContent, cleanMarkdown, markdownBody, DEFAULT_OPTIONS };
 })();

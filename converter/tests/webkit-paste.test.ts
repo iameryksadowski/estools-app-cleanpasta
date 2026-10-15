@@ -51,7 +51,8 @@ test("Mail paste: rendered chat keeps bold, italic, lists and links", { skip }, 
   assert.match(dom, /<i>Dzień dobry Pani Anno,<\/i>/);
   assert.match(dom, /<b>1\. Zakres<\/b>/);
   assert.match(dom, /<ul[^>]*><li>strona z formularzem,<\/li><li>dwa krótkie filmy - po 30&nbsp;s,<\/li><\/ul>/);
-  assert.match(dom, /<ol[^>]*><li>Szkic we wtorek\.<\/li>/);
+  assert.match(dom, /1\. Szkic we wtorek\.(<\/div>|<br>)/);
+  assert.doesNotMatch(dom, /<ol/);
   assert.match(dom, /<a href="https:\/\/example\.com\/brief">briefie<\/a>/);
   assert.doesNotMatch(dom, /background|color|Anthropic/);
 });
@@ -61,7 +62,8 @@ test("Mail paste: Markdown draft file", { skip }, () => {
   assert.match(dom, /<i>Dzień dobry,<\/i>/);
   assert.match(dom, /<b>1\. Scope<\/b>/);
   assert.match(dom, /<ul[^>]*><li>landing page with a form,<\/li>/);
-  assert.match(dom, /<ol[^>]*><li>Draft on Tuesday\.<\/li>/);
+  assert.match(dom, /1\. Draft on Tuesday\./);
+  assert.doesNotMatch(dom, /<ol/);
 });
 
 test("Mail paste: Markdown copied from VS Code", { skip }, () => {

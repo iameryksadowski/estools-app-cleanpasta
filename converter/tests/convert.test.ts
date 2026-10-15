@@ -21,7 +21,7 @@ test("markdown: bold, italic, lists, links and blank lines in Mail markup", () =
     "<div><i>Hi,</i></div><div><br></div><div><b>1. Scope</b></div><div><br></div>" +
       list("ul", "<li>one</li><li>two</li>") +
       "<div><br></div>" +
-      list("ol", "<li>three</li><li>four</li>", ' start="3"') +
+      "<div>3. three</div><div><br></div><div>4. four</div>" +
       "<div><br></div>" +
       '<div><a href="https://example.com">link</a></div>',
   );
@@ -159,7 +159,7 @@ test("html: rendered chat keeps bold, italic, lists and links although its text 
       list("ul", "<li>strona z formularzem,</li><li>dwa krótkie filmy - po 30&nbsp;s,</li>") +
       "<div><br></div>" +
       "<div><b>2. Terminy</b></div><div><br></div>" +
-      list("ol", "<li>Szkic we wtorek.</li><li>Wersja finalna w piątek.</li>") +
+      "<div>1. Szkic we wtorek.</div><div><br></div><div>2. Wersja finalna w piątek.</div>" +
       "<div><br></div>" +
       '<div>Szczegóły w <a href="https://example.com/brief">briefie</a>.</div>',
   );
@@ -210,7 +210,7 @@ test("html: a message formatted by hand in Mail comes out in the same markup, wi
     "<div><i>Hi Anna,</i></div><div><br></div><div><b>1. Scope</b></div><div><br></div>" +
       list("ul", "<li>landing page,</li><li>two videos.</li>") +
       "<div><br></div>" +
-      list("ol", "<li>Draft on Tuesday.</li>"),
+      "<div>1. Draft on Tuesday.</div>",
   );
 });
 
@@ -237,5 +237,32 @@ test("draft file: front matter and notes after the rule are skipped", () => {
   const result = cleanMarkdown(body, ON);
   assert.match(result.html, /thank you for the call - here is the plan/);
   assert.match(result.html, /<li>two short videos - 30 s each,<\/li>/);
-  assert.match(result.html, /<ol[^>]*><li>Draft on Tuesday\.<\/li><li>Final version on Friday\.<\/li><\/ol>/);
+  assert.match(result.html, /<div>1\. Draft on Tuesday\.<\/div><div><br><\/div><div>2\. Final version on Friday\.<\/div>/);
+});
+
+test("numbered points are plain paragraphs; bullets sit right below their lead-in line", () => {
+  // A quote mail: 1., 2., 3. with bullet lists between them used to become an indented
+  // numbered list in Mail, with the bullets breaking the numbering.
+  const result = cleanContent({ text: fixture("numbered-with-bullets.txt") }, { replaceDashes: true, replaceQuotes: true, fontSize: 0 });
+  assert.ok(result);
+  assert.doesNotMatch(result.html, /<ol/);
+  assert.match(result.html, /^<div>Hi Anzhelika,<\/div><div><br><\/div><div>As promised, [^<]+<\/div><div><br><\/div><div>1\. Scope and method/);
+  // the bullets sit right below "2. ...:" and a blank line follows them
+  assert.match(result.html, /<div>1\. Scope and method - [^<]+<\/div><div><br><\/div><div>2\. Options and prices \(net, reverse charge\):<\/div><div><ul class="MailOutline"><li>Option A - /);
+  assert.match(result.html, /<\/ul><\/div><div><br><\/div><div>3\. Platform limits:<\/div><div><ul /);
+  assert.match(result.html, /<div>4\. Review and sign-off[^<]+<\/div><div><br><\/div><div>5\. Timeline/);
+  assert.equal((result.html.match(/<ul /g) ?? []).length, 2);
+});
+
+test("numbered list from rendered HTML: plain lines, nested bullets right below the item", () => {
+  const html = "<ol start=\"2\"><li><p>Options:</p><ul><li>A</li><li>B</li></ul></li><li>Limits</li></ol>";
+  const result = cleanContent({ html, text: "x" }, { replaceDashes: true, replaceQuotes: true, fontSize: 0 });
+  assert.ok(result);
+  assert.equal(result.html, '<div>2. Options:</div><div><ul class="MailOutline"><li>A</li><li>B</li></ul></div><div><br></div><div>3. Limits</div>');
+});
+
+test("greeting on its own first line becomes its own paragraph", () => {
+  assert.equal(cleanMarkdown("Hi Anna,\nthank you for the call.", { replaceDashes: true, replaceQuotes: true, fontSize: 0 }).html, "<div>Hi Anna,</div><div><br></div><div>thank you for the call.</div>");
+  // a longer first line ending in a comma is a sentence, not a greeting
+  assert.equal(cleanMarkdown("Thank you for the call yesterday, it was great and useful,\nsee you.", { replaceDashes: true, replaceQuotes: true, fontSize: 0 }).html, "<div>Thank you for the call yesterday, it was great and useful,<br>see you.</div>");
 });
