@@ -84,7 +84,7 @@ struct AboutView: View {
 
             // ES Tools
             VStack(alignment: .leading, spacing: 8) {
-                if let wordmark = image(colorScheme == .dark ? "ESToolsWordmark-light" : "ESToolsWordmark-dark") {
+                if let wordmark = image(colorScheme == .dark ? "estools-wordmark-light" : "estools-wordmark-dark") {
                     Image(nsImage: wordmark)
                         .resizable()
                         .scaledToFit()
