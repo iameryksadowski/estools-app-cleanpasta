@@ -2,6 +2,12 @@
 
 Until 1.0.1 the app was called ES Tools Clean Paste.
 
+## [1.1.1] - 2026-10-16
+
+### Fixed
+
+- **Slack: no more double blank lines.** After a bullet list (most visibly one with a single point) Slack added a second empty line. Bullet lists are no longer wrapped in an extra block, so every gap is one blank line; Apple Mail pastes the result exactly as before.
+
 ## [1.1.0] - 2026-10-15
 
 ### Changed

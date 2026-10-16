@@ -1,4 +1,4 @@
-/* ES Tools Cleanpasta converter - generated from converter/src/convert.ts (repo @894cd81) by scripts/build-converter.sh. Do not edit. */
+/* ES Tools Cleanpasta converter - generated from converter/src/convert.ts (repo @be2d858) by scripts/build-converter.sh. Do not edit. */
 (() => {
   // converter/node_modules/.pnpm/entities@8.1.0/node_modules/entities/dist/decode-codepoint.js
   var c1 = [
@@ -2245,20 +2245,21 @@
   function numberedLines(list) {
     return list.items.map((item, index) => `${list.start + index}. ${item.html}`);
   }
-  function renderList(list) {
+  function renderList(list, open = '<ul class="MailOutline">') {
     const items = list.items.map((item) => {
       const nested = item.lists.map((sub) => sub.tag === "ol" ? `<br>${numberedLines(sub).join("<br>")}` : renderList(sub)).join("");
       return `<li>${item.html}${nested}</li>`;
     }).join("");
-    return `<ul class="MailOutline">${items}</ul>`;
+    return `${open}${items}</ul>`;
   }
   function render(blocks, options) {
     const size = options.fontSize && options.fontSize > 0 ? Math.round(options.fontSize) : 0;
     const div = size ? `<div style="font-size: ${size}px;">` : "<div>";
     const units = [];
     const leadIn = (html) => /:\s*$/.test(htmlToText(html));
+    const ul = size ? `<ul class="MailOutline" style="font-size: ${size}px;">` : '<ul class="MailOutline">';
     const bullets = (list, glued = false) => ({
-      html: `${div}${renderList(list)}</div>`,
+      html: renderList(list, ul),
       bullets: true,
       leadIn: false,
       glued
@@ -2655,6 +2656,6 @@
     return sanitizer.finish();
   }
 
-  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.jDslHADSGW/entry.ts
+  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.PJQcs35SSR/entry.ts
   globalThis.Cleanpasta = { cleanContent, cleanMarkdown, markdownBody, DEFAULT_OPTIONS };
 })();

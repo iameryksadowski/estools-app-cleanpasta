@@ -147,10 +147,10 @@ function numberedLines(list: List): string[] {
   return list.items.map((item, index) => `${list.start + index}. ${item.html}`);
 }
 
-// Bulleted lists exactly as Apple Mail writes them when you format a message by hand:
-// <div><ul class="MailOutline"><li>...</li></ul></div>. A numbered list nested in a
+// Bulleted lists with Apple Mail's own list class: <ul class="MailOutline"><li>...</li></ul>
+// (Mail itself wraps the list in a <div>; see render). A numbered list nested in a
 // bullet stays as "1. ..." lines inside that bullet.
-function renderList(list: List): string {
+function renderList(list: List, open = '<ul class="MailOutline">'): string {
   const items = list.items
     .map((item) => {
       const nested = item.lists
@@ -159,12 +159,14 @@ function renderList(list: List): string {
       return `<li>${item.html}${nested}</li>`;
     })
     .join("");
-  return `<ul class="MailOutline">${items}</ul>`;
+  return `${open}${items}</ul>`;
 }
 
 /**
  * Mail's own markup: one <div> per line, an empty <div><br></div> as the blank line,
- * lists and tables inside a <div>; with a font size, every <div> carries it.
+ * tables inside a <div>; with a font size, every <div> carries it. Bullet lists are not
+ * wrapped in a <div> (Mail pastes both forms the same, but Slack turns the closing </div>
+ * of a one-item list into an extra blank line); the <ul> carries the font size itself.
  *
  * Numbered lists are not Mail lists: each item is a plain "1. ..." line without an
  * indent, so the numbers stay exactly as written even when bullet lists, notes or blank
@@ -179,8 +181,9 @@ function render(blocks: Block[], options: Options): string {
   type Unit = { html: string; bullets: boolean; leadIn: boolean; glued?: boolean };
   const units: Unit[] = [];
   const leadIn = (html: string) => /:\s*$/.test(htmlToText(html));
+  const ul = size ? `<ul class="MailOutline" style="font-size: ${size}px;">` : '<ul class="MailOutline">';
   const bullets = (list: List, glued = false): Unit => ({
-    html: `${div}${renderList(list)}</div>`,
+    html: renderList(list, ul),
     bullets: true,
     leadIn: false,
     glued,

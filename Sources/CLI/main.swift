@@ -4,7 +4,7 @@ import CleanpastaCore
 // cleanpasta - the ES Tools Cleanpasta command line tool. Same cleaning as the app
 // and the Raycast extension; meant for people, scripts and AI assistants.
 
-let version = "1.1.0"
+let version = "1.1.1"
 
 let usage = """
 cleanpasta \(version) - ES Tools Cleanpasta
