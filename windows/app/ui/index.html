@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ES Tools · Cleanpasta 1.1.1</title><link rel="stylesheet" href="style.css"><script src="settings.js" defer></script></head>
+<body><main><header><img id="wordmark" src="wordmark.svg" alt="ES Tools" width="110"><button id="theme" type="button" aria-pressed="false">Dark mode</button><h1>Cleanpasta <small id="version">1.1.1</small></h1><p>Paste formatted text without backgrounds, colors and fonts. Bold, lists, links and line breaks stay.</p></header>
+<p id="status" role="status" tabindex="-1"></p>
+<form id="settings">
+<section><h2>Shortcuts</h2><label>Paste Clean<input id="pasteShortcut" placeholder="Click and press keys" readonly></label><label>Repair Clipboard<input id="repairShortcut" placeholder="No shortcut" readonly></label><p>Click a field and press the keys. Delete or Backspace clears it. The tray menu always works. If a shortcut is taken, choose another one.</p></section>
+<section><h2>Formatting</h2><label><span>Replace em and en dashes</span><input type="checkbox" id="replaceDashes"></label><label><span>Replace typographic quotes</span><input type="checkbox" id="replaceQuotes"></label><label>Font size<select id="fontSize"><option value="0">Target app size</option><option>11</option><option>12</option><option>13</option><option>14</option><option>16</option></select></label></section>
+<section><h2>General</h2><label><span>Open at login</span><input type="checkbox" id="openAtLogin"></label><label><span>Show a confirmation</span><input type="checkbox" id="showFeedback"></label><label>Command line tool<button type="button" id="installCli">Install to user PATH</button></label><p>No administrator password. Open a new terminal after installing.</p></section>
+<section><h2>Updates</h2><label><span>Check automatically</span><input type="checkbox" id="autoUpdates"></label><button type="button" id="checkUpdate">Check Now</button><p id="updateNote">Updates require Eryk's public signing key.</p><article id="update" hidden><h3 id="updateVersion"></h3><pre id="changelog"></pre><button type="button" id="installUpdate">Install Update</button></article></section>
+<section><h2>Windows permissions</h2><p>Paste Clean presses Ctrl+V after you release the shortcut keys. Windows may block pasting into apps running as administrator. In that case use Ctrl+V yourself.</p></section>
+<button type="submit" class="primary">Save Settings</button>
+</form>
+<section id="about" hidden><h2>About Cleanpasta</h2><p>Cleanpasta 1.1.1 · MIT License</p><p>No telemetry. Clipboard content stays on your computer. Network access is used for updates only.</p><p>Launchers can use cleanpasta://paste, cleanpasta://repair, cleanpasta://settings and cleanpasta://about.</p></section>
+<footer>ES Tools by Eryk Sadowski · eryksadowski.com</footer></main></body></html>

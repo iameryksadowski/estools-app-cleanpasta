@@ -1,0 +1,7 @@
+{
+  "bundle": {
+    "resources": {
+      "binaries/cleanpasta.exe": "cleanpasta.exe"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/cleanpasta-core", "crates/cleanpasta-platform", "crates/cleanpasta-cli"]
+members = ["crates/cleanpasta-core", "crates/cleanpasta-platform", "crates/cleanpasta-cli", "app"]
 default-members = ["crates/cleanpasta-core", "crates/cleanpasta-cli"]
 resolver = "2"
 

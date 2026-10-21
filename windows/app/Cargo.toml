@@ -1,0 +1,22 @@
+[package]
+name = "cleanpasta-app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+build = "build.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+cleanpasta-core = { path = "../crates/cleanpasta-core" }
+cleanpasta-platform = { path = "../crates/cleanpasta-platform" }
+serde.workspace = true
+serde_json.workspace = true
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
+tauri-plugin-deep-link = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-updater = "2"
+url = "2"
