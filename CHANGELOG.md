@@ -7,6 +7,13 @@ Until 1.0.1 the app was called ES Tools Clean Paste.
 ### Fixed
 
 - **Slack: no more double blank lines.** After a bullet list (most visibly one with a single point) Slack added a second empty line. Bullet lists are no longer wrapped in an extra block, so every gap is one blank line; Apple Mail pastes the result exactly as before.
+- Preserve line breaks, blank lines and indentation in HTML and fenced Markdown code blocks; inline code stays literal instead of becoming bold, italic or a link.
+- Keep explicit Markdown numbering, HTML list item values and all descendants of mixed nested lists.
+- Detect standalone Markdown links, italic text and code, convert simple pipe tables, and keep rules inside fenced code when using `--body`.
+- Reject invalid UTF-8 from standard input with exit code 1, matching file input.
+- Preserve unrelated command line tools when installing the CLI, and keep the legacy command available if rename migration fails.
+- Validate and stage downloaded apps before replacing an installation; releases now require a persistent signing identity instead of silently falling back to ad-hoc signing.
+
 
 ## [1.1.0] - 2026-10-15
 
