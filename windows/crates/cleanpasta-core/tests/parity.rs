@@ -19,7 +19,7 @@ struct Case {
 #[test]
 fn exact_typescript_parity_matrix() {
     let cases: Vec<Case> = serde_json::from_str(include_str!("parity.json")).unwrap();
-    assert_eq!(cases.len(), 18);
+    assert_eq!(cases.len(), 45);
     for case in cases {
         let text = if case.body {
             markdown_body(case.input.text.as_deref().unwrap()).unwrap()

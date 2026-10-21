@@ -79,6 +79,240 @@
     }
   },
   {
+    "name": "claude (defaults)",
+    "input": {
+      "source": "claude",
+      "html": "<div class=\"font-claude-response\" style=\"background:#222;color:white\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "chatgpt (defaults)",
+    "input": {
+      "source": "chatgpt",
+      "html": "<article><div class=\"markdown prose\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></article>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "gmail (defaults)",
+    "input": {
+      "source": "gmail",
+      "html": "<div dir=\"ltr\" style=\"font-family:Arial;color:red\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "slack (defaults)",
+    "input": {
+      "source": "slack",
+      "html": "<div class=\"p-rich_text_section\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "notion (defaults)",
+    "input": {
+      "source": "notion",
+      "html": "<div class=\"notion-page-content\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "google-docs (defaults)",
+    "input": {
+      "source": "google-docs",
+      "html": "<b id=\"docs-internal-guid-synthetic\" style=\"font-weight:normal\"><div><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></b>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "word (defaults)",
+    "input": {
+      "source": "word",
+      "html": "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><style>.MsoNormal {color:red}</style></head><body><div class=\"WordSection1\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></body></html>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "whatsapp-web (defaults)",
+    "input": {
+      "source": "whatsapp-web",
+      "html": "<div class=\"copyable-text\"><span><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></span></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "vscode-markdown (defaults)",
+    "input": {
+      "source": "vscode-markdown",
+      "html": "<div style=\"font-family:Menlo;color:blue\">**Plan** dla Żółwia 😊 za 30 s.</div><div></div><div>[Brief](https://example.com/brief?a=1&amp;b=2) i `x_y`.</div><div></div><div>Etapy:</div><div>- Rodzic</div><div>  4. Dziecko</div><div>    - Liść</div><div></div><div>> Cytat</div><div></div><div>| Etap | Dni |</div><div>| --- | --- |</div><div>| Start | 2 |</div><div></div><div>```js</div><div>if (ok) {</div><div>  run();</div><div></div><div>  done();</div><div>}</div><div>```</div><div></div><div>Koniec</div>",
+      "text": "**Plan** dla Żółwia 😊 za 30 s.\n\n[Brief](https://example.com/brief?a=1&b=2) i `x_y`.\n\nEtapy:\n- Rodzic\n  4. Dziecko\n    - Liść\n\n> Cytat\n\n| Etap | Dni |\n| --- | --- |\n| Start | 2 |\n\n```js\nif (ok) {\n  run();\n\n  done();\n}\n```\n\nKoniec",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 12
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 12px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 12px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Cytat</div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}\n</span></div><div style=\"font-size: 12px;\"><br></div><div style=\"font-size: 12px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\n\nKoniec\n"
+    }
+  },
+  {
     "name": "markdown draft body (defaults)",
     "input": {
       "text": "---\nto: someone@example.com\nsubject: Sample draft\n---\n\n*Dzień dobry,*\n\nthank you for the call — here is the plan for next week.\n\n**1. Scope**\n\n- landing page with a form,\n- two short videos – 30 s each,\n- tracking in GA4.\n\n**2. Dates**\n\n1. Draft on Tuesday.\n2. Final version on Friday.\n\nSee [the brief](https://example.com/brief) for details.\n\n---\n\n## Notes for the sender (not part of the mail)\n\nDo not paste this part.\n"
@@ -175,6 +409,240 @@
     }
   },
   {
+    "name": "claude (keep all)",
+    "input": {
+      "source": "claude",
+      "html": "<div class=\"font-claude-response\" style=\"background:#222;color:white\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "chatgpt (keep all)",
+    "input": {
+      "source": "chatgpt",
+      "html": "<article><div class=\"markdown prose\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></article>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "gmail (keep all)",
+    "input": {
+      "source": "gmail",
+      "html": "<div dir=\"ltr\" style=\"font-family:Arial;color:red\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "slack (keep all)",
+    "input": {
+      "source": "slack",
+      "html": "<div class=\"p-rich_text_section\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "notion (keep all)",
+    "input": {
+      "source": "notion",
+      "html": "<div class=\"notion-page-content\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "google-docs (keep all)",
+    "input": {
+      "source": "google-docs",
+      "html": "<b id=\"docs-internal-guid-synthetic\" style=\"font-weight:normal\"><div><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></b>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "word (keep all)",
+    "input": {
+      "source": "word",
+      "html": "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><style>.MsoNormal {color:red}</style></head><body><div class=\"WordSection1\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></body></html>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "whatsapp-web (keep all)",
+    "input": {
+      "source": "whatsapp-web",
+      "html": "<div class=\"copyable-text\"><span><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></span></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "vscode-markdown (keep all)",
+    "input": {
+      "source": "vscode-markdown",
+      "html": "<div style=\"font-family:Menlo;color:blue\">**Plan** dla Żółwia 😊 za 30 s.</div><div></div><div>[Brief](https://example.com/brief?a=1&amp;b=2) i `x_y`.</div><div></div><div>Etapy:</div><div>- Rodzic</div><div>  4. Dziecko</div><div>    - Liść</div><div></div><div>> Cytat</div><div></div><div>| Etap | Dni |</div><div>| --- | --- |</div><div>| Start | 2 |</div><div></div><div>```js</div><div>if (ok) {</div><div>  run();</div><div></div><div>  done();</div><div>}</div><div>```</div><div></div><div>Koniec</div>",
+      "text": "**Plan** dla Żółwia 😊 za 30 s.\n\n[Brief](https://example.com/brief?a=1&b=2) i `x_y`.\n\nEtapy:\n- Rodzic\n  4. Dziecko\n    - Liść\n\n> Cytat\n\n| Etap | Dni |\n| --- | --- |\n| Start | 2 |\n\n```js\nif (ok) {\n  run();\n\n  done();\n}\n```\n\nKoniec",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": false,
+      "replaceQuotes": false,
+      "fontSize": 0
+    },
+    "expected": {
+      "html": "<div><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div><br></div><div><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div><br></div><div>Etapy:</div><ul class=\"MailOutline\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div><br></div><div>Cytat</div><div><br></div><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><div><br></div><div><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}\n</span></div><div><br></div><div>Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\n\nKoniec\n"
+    }
+  },
+  {
     "name": "markdown draft body (keep all)",
     "input": {
       "text": "---\nto: someone@example.com\nsubject: Sample draft\n---\n\n*Dzień dobry,*\n\nthank you for the call — here is the plan for next week.\n\n**1. Scope**\n\n- landing page with a form,\n- two short videos – 30 s each,\n- tracking in GA4.\n\n**2. Dates**\n\n1. Draft on Tuesday.\n2. Final version on Friday.\n\nSee [the brief](https://example.com/brief) for details.\n\n---\n\n## Notes for the sender (not part of the mail)\n\nDo not paste this part.\n"
@@ -268,6 +736,240 @@
     "expected": {
       "html": "<div style=\"font-size: 14px;\"><b>Plan</b></div><div style=\"font-size: 14px;\"><br></div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>one</li></ul>",
       "text": "Plan\n\n- one\n"
+    }
+  },
+  {
+    "name": "claude (size 14)",
+    "input": {
+      "source": "claude",
+      "html": "<div class=\"font-claude-response\" style=\"background:#222;color:white\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "chatgpt (size 14)",
+    "input": {
+      "source": "chatgpt",
+      "html": "<article><div class=\"markdown prose\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></article>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "gmail (size 14)",
+    "input": {
+      "source": "gmail",
+      "html": "<div dir=\"ltr\" style=\"font-family:Arial;color:red\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "slack (size 14)",
+    "input": {
+      "source": "slack",
+      "html": "<div class=\"p-rich_text_section\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "notion (size 14)",
+    "input": {
+      "source": "notion",
+      "html": "<div class=\"notion-page-content\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "google-docs (size 14)",
+    "input": {
+      "source": "google-docs",
+      "html": "<b id=\"docs-internal-guid-synthetic\" style=\"font-weight:normal\"><div><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></b>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "word (size 14)",
+    "input": {
+      "source": "word",
+      "html": "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><style>.MsoNormal {color:red}</style></head><body><div class=\"WordSection1\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></body></html>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "whatsapp-web (size 14)",
+    "input": {
+      "source": "whatsapp-web",
+      "html": "<div class=\"copyable-text\"><span><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></span></div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\nKoniec\n"
+    }
+  },
+  {
+    "name": "vscode-markdown (size 14)",
+    "input": {
+      "source": "vscode-markdown",
+      "html": "<div style=\"font-family:Menlo;color:blue\">**Plan** dla Żółwia 😊 za 30 s.</div><div></div><div>[Brief](https://example.com/brief?a=1&amp;b=2) i `x_y`.</div><div></div><div>Etapy:</div><div>- Rodzic</div><div>  4. Dziecko</div><div>    - Liść</div><div></div><div>> Cytat</div><div></div><div>| Etap | Dni |</div><div>| --- | --- |</div><div>| Start | 2 |</div><div></div><div>```js</div><div>if (ok) {</div><div>  run();</div><div></div><div>  done();</div><div>}</div><div>```</div><div></div><div>Koniec</div>",
+      "text": "**Plan** dla Żółwia 😊 za 30 s.\n\n[Brief](https://example.com/brief?a=1&b=2) i `x_y`.\n\nEtapy:\n- Rodzic\n  4. Dziecko\n    - Liść\n\n> Cytat\n\n| Etap | Dni |\n| --- | --- |\n| Start | 2 |\n\n```js\nif (ok) {\n  run();\n\n  done();\n}\n```\n\nKoniec",
+      "contains": [
+        "Plan dla Żółwia 😊 za 30 s.",
+        "Brief i x_y.",
+        "- Rodzic\n  4. Dziecko\n    - Liść",
+        "Cytat",
+        "Etap\tDni\t\nStart\t2",
+        "if (ok) {\n  run();\n\n  done();\n}",
+        "Koniec"
+      ]
+    },
+    "options": {
+      "replaceDashes": true,
+      "replaceQuotes": true,
+      "fontSize": 14
+    },
+    "expected": {
+      "html": "<div style=\"font-size: 14px;\"><b>Plan</b> dla Żółwia 😊 za 30&nbsp;s.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i x_y.</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Etapy:</div><ul class=\"MailOutline\" style=\"font-size: 14px;\"><li>Rodzic<br>4. Dziecko<ul class=\"MailOutline\"><li>Liść</li></ul></li></ul><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Cytat</div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\"><span style=\"white-space: pre-wrap;\">if (ok) {\n  run();\n\n  done();\n}\n</span></div><div style=\"font-size: 14px;\"><br></div><div style=\"font-size: 14px;\">Koniec</div>",
+      "text": "Plan dla Żółwia 😊 za 30 s.\n\nBrief i x_y.\n\nEtapy:\n\n- Rodzic\n  4. Dziecko\n    - Liść\n\nCytat\n\nEtap\tDni\t\nStart\t2\n\nif (ok) {\n  run();\n\n  done();\n}\n\n\nKoniec\n"
     }
   },
   {
