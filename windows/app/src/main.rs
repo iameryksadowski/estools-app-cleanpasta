@@ -21,8 +21,12 @@ struct State {
     hud: AtomicU64,
     target: AtomicIsize,
     startup_error: Mutex<Option<String>>,
+    show_about: AtomicBool,
 }
 fn show_settings(app: &tauri::AppHandle, about: bool) {
+    app.state::<State>()
+        .show_about
+        .store(about, Ordering::SeqCst);
     if let Some(window) = app.get_webview_window("settings") {
         let _ = window.show();
         let _ = window.set_focus();
@@ -133,7 +137,7 @@ fn get_settings(app: tauri::AppHandle) -> Result<serde_json::Value> {
         serde_json::json!({"settings": state.settings.lock().map_err(|e| e.to_string())?.clone(),
         "openAtLogin": app.autolaunch().is_enabled().map_err(|e| e.to_string())?,
         "startupError": state.startup_error.lock().map_err(|e| e.to_string())?.clone(),
-        "version": app.package_info().version.to_string(), "updatesConfigured": updates_configured()}),
+        "version": app.package_info().version.to_string(), "updatesConfigured": updates_configured(), "showAbout": state.show_about.load(Ordering::SeqCst)}),
     )
 }
 #[tauri::command]
@@ -251,6 +255,7 @@ fn main() {
             hud: AtomicU64::new(0),
             target: AtomicIsize::new(0),
             startup_error: Mutex::new(startup_error),
+            show_about: AtomicBool::new(false),
         })
         .plugin(tauri_plugin_single_instance::init(|_, _, _| {}))
         .plugin(tauri_plugin_deep_link::init())
@@ -294,7 +299,16 @@ fn main() {
             for item in &items {
                 menu.append(item)?;
             }
-            let icon = tauri::image::Image::from_bytes(include_bytes!("../icons/icon.png"))?;
+            let theme = app
+                .get_webview_window("settings")
+                .and_then(|window| window.theme().ok())
+                .unwrap_or(tauri::Theme::Light);
+            let icon_bytes: &[u8] = if theme == tauri::Theme::Dark {
+                include_bytes!("../icons/icon-dark.png")
+            } else {
+                include_bytes!("../icons/icon.png")
+            };
+            let icon = tauri::image::Image::from_bytes(icon_bytes)?;
             TrayIconBuilder::with_id("cleanpasta")
                 .icon(icon)
                 .tooltip("ES Tools Cleanpasta")
@@ -343,12 +357,12 @@ fn main() {
                     handle_link(&handle, url.as_str());
                 }
             });
-            if let Some(urls) = app.deep_link().get_current()? {
-                for url in urls {
-                    handle_link(app.handle(), url.as_str());
-                }
+            let links = app.deep_link().get_current()?.unwrap_or_default();
+            let started_from_link = !links.is_empty();
+            for url in links {
+                handle_link(app.handle(), url.as_str());
             }
-            if !platform::settings_path().exists() {
+            if !started_from_link && !platform::settings_path().exists() {
                 show_settings(app.handle(), false);
             }
             Ok(())

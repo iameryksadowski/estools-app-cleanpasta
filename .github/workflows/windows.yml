@@ -10,7 +10,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: windows-${{ github.event.pull_request.number || github.ref }}
+  group: windows-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
   core-macos:
@@ -81,8 +81,7 @@ jobs:
           Copy-Item target/release/cleanpasta.exe app/binaries/cleanpasta.exe
         timeout-minutes: 1
       - name: Build Tauri NSIS installer (unsigned preview)
-        working-directory: windows/app
-        run: pnpm exec tauri build --bundles nsis -- --locked
+        run: pnpm run build
         timeout-minutes: 20
       - uses: actions/upload-artifact@v4
         with:

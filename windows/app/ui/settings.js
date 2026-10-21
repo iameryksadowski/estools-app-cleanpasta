@@ -9,6 +9,8 @@ async function load() {
   for (const name of ["pasteShortcut", "repairShortcut", "fontSize"]) $(name).value = state.settings[name];
   $("openAtLogin").checked = state.openAtLogin;
   $("version").textContent = state.version;
+  $("about").hidden = !state.showAbout;
+  if (state.showAbout) $("about").scrollIntoView();
   $("autoUpdates").disabled = !state.updatesConfigured;
   if (state.startupError) notice(state.startupError);
   if (state.updatesConfigured) $("updateNote").textContent = "Updates install only after you review the changelog and click Install Update.";

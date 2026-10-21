@@ -25,11 +25,14 @@ cargo test --manifest-path windows/Cargo.toml --locked -p cleanpasta-core -p cle
 cargo build --manifest-path windows/Cargo.toml --locked --release -p cleanpasta-cli
 New-Item -ItemType Directory -Force windows/app/binaries
 Copy-Item windows/target/release/cleanpasta.exe windows/app/binaries/cleanpasta.exe
-cd windows/app
-pnpm dlx @tauri-apps/cli@2 build --bundles nsis -- --locked
+cd windows
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm run build
 ```
 
 Wrap local commands in your terminal's timeout mechanism; CI sets explicit step and job timeouts. On macOS, for example, use `perl -e 'alarm 600; exec @ARGV' cargo test --manifest-path windows/Cargo.toml --locked`. `cargo check --manifest-path windows/Cargo.toml --locked -p cleanpasta-app` checks the Tauri app on macOS; clipboard and injection functions there are explicit Windows-only stubs. Do not distribute this Tauri build as a replacement for the native macOS app.
+
+The UI check uses a mocked Tauri bridge to test shortcut recording, settings payloads, the theme switch and the unconfigured-updater notice; it captures both themes with `chrome-headless-shell`. It does not prove native WebView2 integration. Run it with `pnpm --dir windows exec playwright install chromium-headless-shell`, then `pnpm --dir windows run test:ui`, under a timeout. CI performs this check on Windows and includes the screenshots in the artifact.
 
 The NSIS installer and standalone CLI are uploaded together as `cleanpasta-windows-x64-preview` in the Windows workflow. The installer uses current-user mode. Nothing is published to GitHub Releases automatically. Installers from this workflow have no Authenticode certificate and are intended for an agreed manual test only.
 
