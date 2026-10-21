@@ -7,9 +7,9 @@ const ON = { replaceDashes: true, replaceQuotes: true };
 const OFF = { replaceDashes: false, replaceQuotes: false };
 // every typographic quote the converter replaces
 const TYPOGRAPHIC_QUOTES = /[„“”‟«»‚‘’‛‹›]/;
-// Mail's own list markup: <div><ul class="MailOutline">...</ul></div>
+// Mail's list class, without Mail's wrapping <div> (Slack adds a blank line for it)
 const list = (tag: "ul" | "ol", items: string, start = "") =>
-  `<div><${tag} class="MailOutline"${start}>${items}</${tag}></div>`;
+  `<${tag} class="MailOutline"${start}>${items}</${tag}>`;
 
 test("markdown: bold, italic, lists, links and blank lines in Mail markup", () => {
   const result = cleanMarkdown(
@@ -219,9 +219,15 @@ test("font size: every line, blank line and list gets it, as in Mail's own messa
   assert.equal(
     result.html,
     '<div style="font-size: 12px;"><b>Plan</b></div><div style="font-size: 12px;"><br></div>' +
-      '<div style="font-size: 12px;"><ul class="MailOutline"><li>one</li></ul></div>',
+      '<ul class="MailOutline" style="font-size: 12px;"><li>one</li></ul>',
   );
   assert.doesNotMatch(cleanMarkdown("a", { replaceDashes: true, fontSize: 0 }).html, /font-size/);
+});
+
+test("bullet lists are not wrapped in a <div> - Slack pastes that as a double blank line", () => {
+  const result = cleanMarkdown("**Monday**\n\n- one point\n\n**Challenge**\n\n- a\n- b", { replaceDashes: true, fontSize: 12 });
+  assert.doesNotMatch(result.html, /<div[^>]*><ul|<\/ul><\/div>/);
+  assert.match(result.html, /<\/ul><div style="font-size: 12px;"><br><\/div><div style="font-size: 12px;"><b>Challenge<\/b>/);
 });
 
 test("markdown detection", () => {
@@ -248,8 +254,8 @@ test("numbered points are plain paragraphs; bullets sit right below their lead-i
   assert.doesNotMatch(result.html, /<ol/);
   assert.match(result.html, /^<div>Hi Anzhelika,<\/div><div><br><\/div><div>As promised, [^<]+<\/div><div><br><\/div><div>1\. Scope and method/);
   // the bullets sit right below "2. ...:" and a blank line follows them
-  assert.match(result.html, /<div>1\. Scope and method - [^<]+<\/div><div><br><\/div><div>2\. Options and prices \(net, reverse charge\):<\/div><div><ul class="MailOutline"><li>Option A - /);
-  assert.match(result.html, /<\/ul><\/div><div><br><\/div><div>3\. Platform limits:<\/div><div><ul /);
+  assert.match(result.html, /<div>1\. Scope and method - [^<]+<\/div><div><br><\/div><div>2\. Options and prices \(net, reverse charge\):<\/div><ul class="MailOutline"><li>Option A - /);
+  assert.match(result.html, /<\/ul><div><br><\/div><div>3\. Platform limits:<\/div><ul /);
   assert.match(result.html, /<div>4\. Review and sign-off[^<]+<\/div><div><br><\/div><div>5\. Timeline/);
   assert.equal((result.html.match(/<ul /g) ?? []).length, 2);
 });
@@ -258,7 +264,7 @@ test("numbered list from rendered HTML: plain lines, nested bullets right below 
   const html = "<ol start=\"2\"><li><p>Options:</p><ul><li>A</li><li>B</li></ul></li><li>Limits</li></ol>";
   const result = cleanContent({ html, text: "x" }, { replaceDashes: true, replaceQuotes: true, fontSize: 0 });
   assert.ok(result);
-  assert.equal(result.html, '<div>2. Options:</div><div><ul class="MailOutline"><li>A</li><li>B</li></ul></div><div><br></div><div>3. Limits</div>');
+  assert.equal(result.html, '<div>2. Options:</div><ul class="MailOutline"><li>A</li><li>B</li></ul><div><br></div><div>3. Limits</div>');
 });
 
 test("greeting on its own first line becomes its own paragraph", () => {

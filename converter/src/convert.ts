@@ -39,8 +39,8 @@ export type CleanResult = {
 };
 
 type List = { tag: "ul" | "ol"; start: number; items: Item[] };
-type Item = { html: string; lists: List[] };
-type Block = { kind: "p"; html: string } | { kind: "list"; list: List } | { kind: "table"; html: string };
+type Item = { html: string; lists: List[]; number?: number };
+type Block = { kind: "code"; text: string } | { kind: "p"; html: string } | { kind: "list"; list: List } | { kind: "table"; html: string };
 
 const DASHES = /[\u2012\u2013\u2014\u2015]/g; // figure dash, en dash, em dash, horizontal bar
 // low-9, left, right and reversed double quotes, left and right guillemets -> "
@@ -120,7 +120,8 @@ export function looksLikeMarkdown(text: string): boolean {
   if (/\*\*[^*\n]+\*\*/.test(text)) {
     return true;
   }
-  return /^\s*([-*+]|\d+[.)]|#{1,6})\s+\S/m.test(text);
+  return /^\s*([-*+]|\d+[.)]|#{1,6})\s+\S/m.test(text) ||
+    /`[^`]+`|^\s*(`{3,}|~{3,})|\[[^\]\n]+\]\((?:https?:|mailto:)|(?<![\p{L}\p{N}])([*_])[^\s*_].*?\1(?![\p{L}\p{N}])/mu.test(text);
 }
 
 /**
@@ -143,28 +144,34 @@ function showsMarkdownSource(blocks: Block[]): boolean {
 // --- output -------------------------------------------------------------------------
 
 /** "1. text" lines of a numbered list (numbered lists are pasted as plain text lines). */
-function numberedLines(list: List): string[] {
-  return list.items.map((item, index) => `${list.start + index}. ${item.html}`);
+function itemNumber(list: List, index: number): number {
+  return list.items[index].number ?? list.start + index;
 }
 
-// Bulleted lists exactly as Apple Mail writes them when you format a message by hand:
-// <div><ul class="MailOutline"><li>...</li></ul></div>. A numbered list nested in a
+function nestedLists(lists: List[]): string {
+  return lists.map((sub) => sub.tag === "ol"
+    ? sub.items.map((item, index) => `<br>${itemNumber(sub, index)}. ${item.html}${nestedLists(item.lists)}`).join("")
+    : renderList(sub)).join("");
+}
+
+// Bulleted lists with Apple Mail's own list class: <ul class="MailOutline"><li>...</li></ul>
+// (Mail itself wraps the list in a <div>; see render). A numbered list nested in a
 // bullet stays as "1. ..." lines inside that bullet.
-function renderList(list: List): string {
+function renderList(list: List, open = '<ul class="MailOutline">'): string {
   const items = list.items
     .map((item) => {
-      const nested = item.lists
-        .map((sub) => (sub.tag === "ol" ? `<br>${numberedLines(sub).join("<br>")}` : renderList(sub)))
-        .join("");
+      const nested = nestedLists(item.lists);
       return `<li>${item.html}${nested}</li>`;
     })
     .join("");
-  return `<ul class="MailOutline">${items}</ul>`;
+  return `${open}${items}</ul>`;
 }
 
 /**
  * Mail's own markup: one <div> per line, an empty <div><br></div> as the blank line,
- * lists and tables inside a <div>; with a font size, every <div> carries it.
+ * tables inside a <div>; with a font size, every <div> carries it. Bullet lists are not
+ * wrapped in a <div> (Mail pastes both forms the same, but Slack turns the closing </div>
+ * of a one-item list into an extra blank line); the <ul> carries the font size itself.
  *
  * Numbered lists are not Mail lists: each item is a plain "1. ..." line without an
  * indent, so the numbers stay exactly as written even when bullet lists, notes or blank
@@ -179,15 +186,16 @@ function render(blocks: Block[], options: Options): string {
   type Unit = { html: string; bullets: boolean; leadIn: boolean; glued?: boolean };
   const units: Unit[] = [];
   const leadIn = (html: string) => /:\s*$/.test(htmlToText(html));
+  const ul = size ? `<ul class="MailOutline" style="font-size: ${size}px;">` : '<ul class="MailOutline">';
   const bullets = (list: List, glued = false): Unit => ({
-    html: `${div}${renderList(list)}</div>`,
+    html: renderList(list, ul),
     bullets: true,
     leadIn: false,
     glued,
   });
   const numbered = (list: List): void => {
     list.items.forEach((item, index) => {
-      units.push({ html: `${div}${list.start + index}. ${item.html}</div>`, bullets: false, leadIn: leadIn(item.html) });
+      units.push({ html: `${div}${itemNumber(list, index)}. ${item.html}</div>`, bullets: false, leadIn: leadIn(item.html) });
       for (const sub of item.lists) {
         if (sub.tag === "ol") {
           numbered(sub);
@@ -198,7 +206,9 @@ function render(blocks: Block[], options: Options): string {
     });
   };
   for (const block of blocks) {
-    if (block.kind === "p") {
+    if (block.kind === "code") {
+      units.push({ html: `${div}<span style="white-space: pre-wrap;">${escapeHtml(block.text)}</span></div>`, bullets: false, leadIn: false });
+    } else if (block.kind === "p") {
       units.push({ html: `${div}${block.html}</div>`, bullets: false, leadIn: leadIn(block.html) });
     } else if (block.kind === "table") {
       units.push({ html: size ? `${div}${block.html}</div>` : block.html, bullets: false, leadIn: false });
@@ -236,7 +246,7 @@ function decodeEntities(text: string): string {
 function listToText(list: List, depth = 0): string[] {
   const lines: string[] = [];
   list.items.forEach((item, index) => {
-    const mark = list.tag === "ol" ? `${list.start + index}.` : "-";
+    const mark = list.tag === "ol" ? `${itemNumber(list, index)}.` : "-";
     lines.push(`${"  ".repeat(depth)}${mark} ${htmlToText(item.html).trim()}`);
     for (const sub of item.lists) {
       lines.push(...listToText(sub, depth + 1));
@@ -249,6 +259,7 @@ function toPlainText(blocks: Block[]): string {
   return (
     blocks
       .map((block) => {
+        if (block.kind === "code") { return block.text; }
         if (block.kind === "list") {
           return listToText(block.list).join("\n");
         }
@@ -277,7 +288,12 @@ function inlineMarkdown(text: string, options: Options): string {
   // Link URLs are set aside first, so neither dash and quote replacement nor the
   // bold and italic markers can change them.
   const urls: string[] = [];
-  let out = escapeHtml(text.replace(/[\ue000\ue001]/g, "")).replace(MARKDOWN_LINK, (_, label: string, url: string) => {
+  const codes: string[] = [];
+  const source = text.replace(/[\ue000-\ue003]/g, "").replace(/(`+)([\s\S]*?)\1/g, (_, _ticks: string, code: string) => {
+    codes.push(escapeHtml(typography(code, options)));
+    return `\ue002${codes.length - 1}\ue003`;
+  });
+  let out = escapeHtml(source).replace(MARKDOWN_LINK, (_, label: string, url: string) => {
     urls.push(url);
     return `[${label}]\ue000${urls.length - 1}\ue001`;
   });
@@ -289,7 +305,7 @@ function inlineMarkdown(text: string, options: Options): string {
   out = out.replace(LINK_SLOT, (_, label: string, index: string) => {
     return `<a href="${urls[Number(index)].replace(/"/g, "&quot;")}">${label}</a>`;
   });
-  return out.replace(/\u00a0/g, "&nbsp;");
+  return out.replace(/\ue002(\d+)\ue003/g, (_, index: string) => codes[Number(index)]).replace(/\u00a0/g, "&nbsp;");
 }
 
 function newList(marker: string): List {
@@ -318,7 +334,39 @@ function markdownToBlocks(markdown: string, options: Options): Block[] {
     }
   };
 
-  for (const raw of markdown.replace(/\r\n/g, "\n").split("\n")) {
+  let fence: { marker: string; length: number; lines: string[] } | undefined;
+  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+  const cells = (line: string) => line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map((cell) => cell.trim().replace(/\\\|/g, "|"));
+  for (let row = 0; row < lines.length; row++) {
+    const raw = lines[row];
+    const marker = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(raw);
+    if (fence) {
+      if (marker && marker[1][0] === fence.marker && marker[1].length >= fence.length && !marker[2].trim()) {
+        blocks.push({ kind: "code", text: typography(fence.lines.join("\n") + "\n", options) });
+        fence = undefined;
+      } else { fence.lines.push(raw); }
+      continue;
+    }
+    if (marker) {
+      closeParagraph();
+      stack = [];
+      fence = { marker: marker[1][0], length: marker[1].length, lines: [] };
+      continue;
+    }
+    const header = cells(raw);
+    const separator = cells(lines[row + 1] ?? "");
+    if (raw.includes("|") && header.length > 1 && separator.length === header.length && separator.every((cell) => /^:?-{3,}:?$/.test(cell))) {
+      closeParagraph();
+      stack = [];
+      const renderRow = (values: string[], tag: string) => `<tr>${header.map((_, index) => `<${tag}>${inlineMarkdown(values[index] ?? "", options)}</${tag}>`).join("")}</tr>`;
+      let html = '<table border="1" cellpadding="4" cellspacing="0">' + renderRow(header, "th");
+      row++;
+      while (row + 1 < lines.length && lines[row + 1].includes("|") && lines[row + 1].trim()) {
+        html += renderRow(cells(lines[++row]), "td");
+      }
+      blocks.push({ kind: "table", html: html + "</table>" });
+      continue;
+    }
     const line = raw.replace(/\s+$/, "");
     if (!line.trim() || RULE_LINE.test(line)) {
       closeParagraph();
@@ -352,7 +400,7 @@ function markdownToBlocks(markdown: string, options: Options): Block[] {
         }
         stack.push({ indent, list });
       }
-      stack[stack.length - 1].list.items.push({ html: inlineMarkdown(match[3], options), lists: [] });
+      stack[stack.length - 1].list.items.push({ html: inlineMarkdown(match[3], options), lists: [], number: tag === "ol" ? parseInt(marker, 10) : undefined });
       continue;
     }
     if (stack.length > 0) {
@@ -369,6 +417,7 @@ function markdownToBlocks(markdown: string, options: Options): Block[] {
     }
     paragraph.push(line.replace(/^\s*>\s?/, ""));
   }
+  if (fence) { blocks.push({ kind: "code", text: typography(fence.lines.join("\n"), options) }); }
   closeParagraph();
   return blocks;
 }
@@ -383,7 +432,19 @@ export function markdownBody(markdown: string): string {
     }
   }
   const body: string[] = [];
+  let fence: { marker: string; length: number } | undefined;
   for (const line of lines) {
+    const marker = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+    if (fence) {
+      body.push(line);
+      if (marker && marker[1][0] === fence.marker && marker[1].length >= fence.length && !marker[2].trim()) { fence = undefined; }
+      continue;
+    }
+    if (marker) {
+      fence = { marker: marker[1][0], length: marker[1].length };
+      body.push(line);
+      continue;
+    }
     if (RULE_LINE.test(line) && body.some((l) => l.trim())) {
       break;
     }
@@ -428,6 +489,7 @@ class Sanitizer {
   private lists: List[] = [];
   private items: Item[] = [];
   private skip = 0;
+  private pre: string[] | null = null;
   private table: string[] | null = null;
   private readonly options: Options;
 
@@ -466,6 +528,8 @@ class Sanitizer {
     if (this.skip > 0) {
       return;
     }
+    if (tag === "pre") { this.flush(); this.pre = []; return; }
+    if (this.pre) { if (tag === "br") { this.pre.push("\n"); } return; }
     const style = (attrs.style ?? "").toLowerCase().replace(/\s+/g, "");
     if (tag === "br") {
       this.buf.push("<br>");
@@ -489,7 +553,12 @@ class Sanitizer {
     }
     if (tag === "li") {
       this.flush();
-      const item: Item = { html: "", lists: [] };
+      const list = this.lists[this.lists.length - 1];
+      const previous = list?.items.at(-1);
+      const number = list?.tag === "ol"
+        ? (/^-?\d+$/.test(attrs.value ?? "") ? Number(attrs.value) : previous ? (previous.number ?? list.start) + 1 : list.start)
+        : undefined;
+      const item: Item = { html: "", lists: [], number };
       this.lists[this.lists.length - 1]?.items.push(item);
       this.items.push(item);
       return;
@@ -548,6 +617,16 @@ class Sanitizer {
     if (this.skip > 0) {
       return;
     }
+    if (this.pre) {
+      if (tag === "pre") {
+        const text = this.pre.join("");
+        this.pre = null;
+        if (this.items.length || this.table) {
+          this.buf.push(`<span style="white-space: pre-wrap;">${escapeHtml(text)}</span>`);
+        } else { this.blocks.push({ kind: "code", text }); }
+      }
+      return;
+    }
     if (tag === "ul" || tag === "ol") {
       this.flush();
       this.lists.pop();
@@ -589,6 +668,7 @@ class Sanitizer {
     if (this.skip > 0) {
       return;
     }
+    if (this.pre) { this.pre.push(typography(data, this.options)); return; }
     // only visible text: attributes (href) never pass through here
     const text = escapeHtml(typography(data.replace(WHITESPACE, " "), this.options));
     this.buf.push(text.replace(/\u00a0/g, "&nbsp;"));

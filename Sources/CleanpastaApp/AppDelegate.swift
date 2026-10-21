@@ -305,22 +305,26 @@ enum Migration {
     static func afterRename() {
         let defaults = UserDefaults.standard
         guard !defaults.bool(forKey: "migratedToCleanpasta") else { return }
-        defaults.set(true, forKey: "migratedToCleanpasta")
         let fm = FileManager.default
-        var hadLink = false
+        var legacyLinks: [URL] = []
         for folder in CommandLineTool.candidateFolders {
             let old = folder.appendingPathComponent("cleanpaste")
             if let destination = try? fm.destinationOfSymbolicLink(atPath: old.path), destination.contains("/" + oldBundleName + "/") || destination.contains("/" + newBundleName + "/") {
-                try? fm.removeItem(at: old)
-                hadLink = true
+                legacyLinks.append(old)
             }
         }
-        if hadLink {
-            _ = CommandLineTool.install()
+        if !legacyLinks.isEmpty {
+            do {
+                try CLIInstallation.migrate(legacyLinks: legacyLinks, helper: CommandLineTool.helper, folder: CommandLineTool.targetFolder)
+            } catch {
+                NSLog("Cleanpasta: command line migration will retry: %@", error.localizedDescription)
+                return
+            }
         }
         if SMAppService.mainApp.status == .enabled {
             try? SMAppService.mainApp.unregister()
             try? SMAppService.mainApp.register()
         }
+        defaults.set(true, forKey: "migratedToCleanpasta")
     }
 }

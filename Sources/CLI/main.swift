@@ -4,7 +4,7 @@ import CleanpastaCore
 // cleanpasta - the ES Tools Cleanpasta command line tool. Same cleaning as the app
 // and the Raycast extension; meant for people, scripts and AI assistants.
 
-let version = "1.1.0"
+let version = "1.1.1"
 
 let usage = """
 cleanpasta \(version) - ES Tools Cleanpasta
@@ -123,7 +123,9 @@ if let file, file != "-" {
     if kind == .auto { kind = ["md", "markdown"].contains(ext) ? .markdown : ["html", "htm"].contains(ext) ? .html : .text }
     assign(content)
 } else if !repair && (file == "-" || isatty(FileHandle.standardInput.fileDescriptor) == 0) {
-    assign(String(decoding: FileHandle.standardInput.readDataToEndOfFile(), as: UTF8.self))
+    let data = FileHandle.standardInput.readDataToEndOfFile()
+    guard let content = String(data: data, encoding: .utf8) else { fail("standard input is not valid UTF-8") }
+    assign(content)
 } else {
     let clipboard = Clipboard.read()
     switch kind {

@@ -1,6 +1,7 @@
 import AppKit
 import ServiceManagement
 import SwiftUI
+import CleanpastaCore
 
 /// The settings window. While it is open the app has a Dock icon; closing it puts the
 /// app back into the menu bar only.
@@ -276,13 +277,8 @@ enum CommandLineTool {
             return Status(installed: false, path: "", note: "The command line tool is missing from this build.")
         }
         let folder = targetFolder
-        let link = folder.appendingPathComponent("cleanpasta")
         do {
-            try fm.createDirectory(at: folder, withIntermediateDirectories: true)
-            if (try? fm.destinationOfSymbolicLink(atPath: link.path)) != nil || fm.fileExists(atPath: link.path) {
-                try fm.removeItem(at: link)
-            }
-            try fm.createSymbolicLink(at: link, withDestinationURL: helper)
+            try CLIInstallation.install(helper: helper, folder: folder)
         } catch {
             return Status(installed: false, path: "", note: "Could not install: \(error.localizedDescription)")
         }

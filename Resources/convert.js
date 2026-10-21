@@ -1,4 +1,4 @@
-/* ES Tools Cleanpasta converter - generated from converter/src/convert.ts (repo @894cd81) by scripts/build-converter.sh. Do not edit. */
+/* ES Tools Cleanpasta converter - generated from converter/src/convert.ts (repo @be253bb) by scripts/build-converter.sh. Do not edit. */
 (() => {
   // converter/node_modules/.pnpm/entities@8.1.0/node_modules/entities/dist/decode-codepoint.js
   var c1 = [
@@ -2233,7 +2233,7 @@
     if (/\*\*[^*\n]+\*\*/.test(text)) {
       return true;
     }
-    return /^\s*([-*+]|\d+[.)]|#{1,6})\s+\S/m.test(text);
+    return /^\s*([-*+]|\d+[.)]|#{1,6})\s+\S/m.test(text) || /`[^`]+`|^\s*(`{3,}|~{3,})|\[[^\]\n]+\]\((?:https?:|mailto:)|(?<![\p{L}\p{N}])([*_])[^\s*_].*?\1(?![\p{L}\p{N}])/mu.test(text);
   }
   function showsMarkdownSource(blocks) {
     const visible = blocks.filter((block) => block.kind === "p").map((block) => htmlToText(block.html)).join("\n");
@@ -2242,30 +2242,34 @@
     }
     return !blocks.some((block) => block.kind !== "p" || /<(b|i|u|a)[\s>]/.test(block.html));
   }
-  function numberedLines(list) {
-    return list.items.map((item, index) => `${list.start + index}. ${item.html}`);
+  function itemNumber(list, index) {
+    return list.items[index].number ?? list.start + index;
   }
-  function renderList(list) {
+  function nestedLists(lists) {
+    return lists.map((sub) => sub.tag === "ol" ? sub.items.map((item, index) => `<br>${itemNumber(sub, index)}. ${item.html}${nestedLists(item.lists)}`).join("") : renderList(sub)).join("");
+  }
+  function renderList(list, open = '<ul class="MailOutline">') {
     const items = list.items.map((item) => {
-      const nested = item.lists.map((sub) => sub.tag === "ol" ? `<br>${numberedLines(sub).join("<br>")}` : renderList(sub)).join("");
+      const nested = nestedLists(item.lists);
       return `<li>${item.html}${nested}</li>`;
     }).join("");
-    return `<ul class="MailOutline">${items}</ul>`;
+    return `${open}${items}</ul>`;
   }
   function render(blocks, options) {
     const size = options.fontSize && options.fontSize > 0 ? Math.round(options.fontSize) : 0;
     const div = size ? `<div style="font-size: ${size}px;">` : "<div>";
     const units = [];
     const leadIn = (html) => /:\s*$/.test(htmlToText(html));
+    const ul = size ? `<ul class="MailOutline" style="font-size: ${size}px;">` : '<ul class="MailOutline">';
     const bullets = (list, glued = false) => ({
-      html: `${div}${renderList(list)}</div>`,
+      html: renderList(list, ul),
       bullets: true,
       leadIn: false,
       glued
     });
     const numbered = (list) => {
       list.items.forEach((item, index) => {
-        units.push({ html: `${div}${list.start + index}. ${item.html}</div>`, bullets: false, leadIn: leadIn(item.html) });
+        units.push({ html: `${div}${itemNumber(list, index)}. ${item.html}</div>`, bullets: false, leadIn: leadIn(item.html) });
         for (const sub of item.lists) {
           if (sub.tag === "ol") {
             numbered(sub);
@@ -2276,7 +2280,9 @@
       });
     };
     for (const block of blocks) {
-      if (block.kind === "p") {
+      if (block.kind === "code") {
+        units.push({ html: `${div}<span style="white-space: pre-wrap;">${escapeHtml(block.text)}</span></div>`, bullets: false, leadIn: false });
+      } else if (block.kind === "p") {
         units.push({ html: `${div}${block.html}</div>`, bullets: false, leadIn: leadIn(block.html) });
       } else if (block.kind === "table") {
         units.push({ html: size ? `${div}${block.html}</div>` : block.html, bullets: false, leadIn: false });
@@ -2304,7 +2310,7 @@
   function listToText(list, depth = 0) {
     const lines = [];
     list.items.forEach((item, index) => {
-      const mark = list.tag === "ol" ? `${list.start + index}.` : "-";
+      const mark = list.tag === "ol" ? `${itemNumber(list, index)}.` : "-";
       lines.push(`${"  ".repeat(depth)}${mark} ${htmlToText(item.html).trim()}`);
       for (const sub of item.lists) {
         lines.push(...listToText(sub, depth + 1));
@@ -2314,6 +2320,9 @@
   }
   function toPlainText(blocks) {
     return blocks.map((block) => {
+      if (block.kind === "code") {
+        return block.text;
+      }
       if (block.kind === "list") {
         return listToText(block.list).join("\n");
       }
@@ -2332,7 +2341,12 @@
   var LINK_SLOT = /\[([^\]]+)\]\ue000(\d+)\ue001/g;
   function inlineMarkdown(text, options) {
     const urls = [];
-    let out = escapeHtml(text.replace(/[\ue000\ue001]/g, "")).replace(MARKDOWN_LINK, (_, label, url) => {
+    const codes = [];
+    const source = text.replace(/[\ue000-\ue003]/g, "").replace(/(`+)([\s\S]*?)\1/g, (_, _ticks, code) => {
+      codes.push(escapeHtml(typography(code, options)));
+      return `${codes.length - 1}`;
+    });
+    let out = escapeHtml(source).replace(MARKDOWN_LINK, (_, label, url) => {
       urls.push(url);
       return `[${label}]${urls.length - 1}`;
     });
@@ -2344,7 +2358,7 @@
     out = out.replace(LINK_SLOT, (_, label, index) => {
       return `<a href="${urls[Number(index)].replace(/"/g, "&quot;")}">${label}</a>`;
     });
-    return out.replace(/\u00a0/g, "&nbsp;");
+    return out.replace(/\ue002(\d+)\ue003/g, (_, index) => codes[Number(index)]).replace(/\u00a0/g, "&nbsp;");
   }
   function newList(marker) {
     const ordered = /^\d/.test(marker);
@@ -2365,7 +2379,41 @@
         paragraph.length = 0;
       }
     };
-    for (const raw of markdown.replace(/\r\n/g, "\n").split("\n")) {
+    let fence;
+    const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+    const cells = (line) => line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map((cell) => cell.trim().replace(/\\\|/g, "|"));
+    for (let row = 0; row < lines.length; row++) {
+      const raw = lines[row];
+      const marker = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(raw);
+      if (fence) {
+        if (marker && marker[1][0] === fence.marker && marker[1].length >= fence.length && !marker[2].trim()) {
+          blocks.push({ kind: "code", text: typography(fence.lines.join("\n") + "\n", options) });
+          fence = void 0;
+        } else {
+          fence.lines.push(raw);
+        }
+        continue;
+      }
+      if (marker) {
+        closeParagraph();
+        stack = [];
+        fence = { marker: marker[1][0], length: marker[1].length, lines: [] };
+        continue;
+      }
+      const header = cells(raw);
+      const separator = cells(lines[row + 1] ?? "");
+      if (raw.includes("|") && header.length > 1 && separator.length === header.length && separator.every((cell) => /^:?-{3,}:?$/.test(cell))) {
+        closeParagraph();
+        stack = [];
+        const renderRow = (values, tag) => `<tr>${header.map((_, index) => `<${tag}>${inlineMarkdown(values[index] ?? "", options)}</${tag}>`).join("")}</tr>`;
+        let html = '<table border="1" cellpadding="4" cellspacing="0">' + renderRow(header, "th");
+        row++;
+        while (row + 1 < lines.length && lines[row + 1].includes("|") && lines[row + 1].trim()) {
+          html += renderRow(cells(lines[++row]), "td");
+        }
+        blocks.push({ kind: "table", html: html + "</table>" });
+        continue;
+      }
       const line = raw.replace(/\s+$/, "");
       if (!line.trim() || RULE_LINE.test(line)) {
         closeParagraph();
@@ -2376,21 +2424,21 @@
       if (match) {
         closeParagraph();
         const indent = match[1].replace(/\t/g, "    ").length;
-        const marker = match[2];
-        const tag = /^\d/.test(marker) ? "ol" : "ul";
+        const marker2 = match[2];
+        const tag = /^\d/.test(marker2) ? "ol" : "ul";
         while (stack.length > 0 && indent < stack[stack.length - 1].indent) {
           stack.pop();
         }
         const top = stack[stack.length - 1];
         if (top && indent > top.indent && top.list.items.length > 0) {
-          const list = newList(marker);
+          const list = newList(marker2);
           top.list.items[top.list.items.length - 1].lists.push(list);
           stack.push({ indent, list });
         } else if (!top || top.list.tag !== tag) {
           if (top) {
             stack.pop();
           }
-          const list = newList(marker);
+          const list = newList(marker2);
           const parent = stack[stack.length - 1];
           if (parent) {
             parent.list.items[parent.list.items.length - 1].lists.push(list);
@@ -2399,7 +2447,7 @@
           }
           stack.push({ indent, list });
         }
-        stack[stack.length - 1].list.items.push({ html: inlineMarkdown(match[3], options), lists: [] });
+        stack[stack.length - 1].list.items.push({ html: inlineMarkdown(match[3], options), lists: [], number: tag === "ol" ? parseInt(marker2, 10) : void 0 });
         continue;
       }
       if (stack.length > 0) {
@@ -2415,6 +2463,9 @@
       }
       paragraph.push(line.replace(/^\s*>\s?/, ""));
     }
+    if (fence) {
+      blocks.push({ kind: "code", text: typography(fence.lines.join("\n"), options) });
+    }
     closeParagraph();
     return blocks;
   }
@@ -2427,7 +2478,21 @@
       }
     }
     const body = [];
+    let fence;
     for (const line of lines) {
+      const marker = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+      if (fence) {
+        body.push(line);
+        if (marker && marker[1][0] === fence.marker && marker[1].length >= fence.length && !marker[2].trim()) {
+          fence = void 0;
+        }
+        continue;
+      }
+      if (marker) {
+        fence = { marker: marker[1][0], length: marker[1].length };
+        body.push(line);
+        continue;
+      }
       if (RULE_LINE.test(line) && body.some((l) => l.trim())) {
         break;
       }
@@ -2468,6 +2533,7 @@
     lists = [];
     items = [];
     skip = 0;
+    pre = null;
     table = null;
     options;
     constructor(options) {
@@ -2502,6 +2568,17 @@
       if (this.skip > 0) {
         return;
       }
+      if (tag === "pre") {
+        this.flush();
+        this.pre = [];
+        return;
+      }
+      if (this.pre) {
+        if (tag === "br") {
+          this.pre.push("\n");
+        }
+        return;
+      }
       const style = (attrs.style ?? "").toLowerCase().replace(/\s+/g, "");
       if (tag === "br") {
         this.buf.push("<br>");
@@ -2525,7 +2602,10 @@
       }
       if (tag === "li") {
         this.flush();
-        const item = { html: "", lists: [] };
+        const list = this.lists[this.lists.length - 1];
+        const previous = list?.items.at(-1);
+        const number = list?.tag === "ol" ? /^-?\d+$/.test(attrs.value ?? "") ? Number(attrs.value) : previous ? (previous.number ?? list.start) + 1 : list.start : void 0;
+        const item = { html: "", lists: [], number };
         this.lists[this.lists.length - 1]?.items.push(item);
         this.items.push(item);
         return;
@@ -2582,6 +2662,18 @@
       if (this.skip > 0) {
         return;
       }
+      if (this.pre) {
+        if (tag === "pre") {
+          const text = this.pre.join("");
+          this.pre = null;
+          if (this.items.length || this.table) {
+            this.buf.push(`<span style="white-space: pre-wrap;">${escapeHtml(text)}</span>`);
+          } else {
+            this.blocks.push({ kind: "code", text });
+          }
+        }
+        return;
+      }
       if (tag === "ul" || tag === "ol") {
         this.flush();
         this.lists.pop();
@@ -2622,6 +2714,10 @@
       if (this.skip > 0) {
         return;
       }
+      if (this.pre) {
+        this.pre.push(typography(data, this.options));
+        return;
+      }
       const text = escapeHtml(typography(data.replace(WHITESPACE, " "), this.options));
       this.buf.push(text.replace(/\u00a0/g, "&nbsp;"));
     }
@@ -2655,6 +2751,6 @@
     return sanitizer.finish();
   }
 
-  // ../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.jDslHADSGW/entry.ts
+  // ../../../../../../../private/var/folders/lm/tsg6ymws03x2xm8_p7w4f8zc0000gn/T/tmp.nZXykPVaGJ/entry.ts
   globalThis.Cleanpasta = { cleanContent, cleanMarkdown, markdownBody, DEFAULT_OPTIONS };
 })();
