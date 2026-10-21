@@ -53,12 +53,14 @@ Updates use [Sparkle](https://sparkle-project.org) with an EdDSA signature; the 
 
 ## Development
 
-- `scripts/test.sh` - builds the CLI and checks JavaScriptCore against the TypeScript converter (needs the Raycast extension next to this repo with `npm install` done).
-- `scripts/build-converter.sh` - rebuilds `Resources/convert.js` after a converter change in the extension.
+- `scripts/test.sh` - builds the CLI and checks JavaScriptCore against the TypeScript converter (run `pnpm install` in `converter/` first).
+- `scripts/build-converter.sh` - rebuilds `Resources/convert.js` after a change in `converter/src/convert.ts`.
 - `scripts/make-icon.sh` - `design/icon.svg` (light) and `design/icon-dark.svg` to the app icons.
 - `scripts/build-app.sh` - `dist/Cleanpasta.app`, zip and DMG (universal: Apple silicon and Intel).
 - `scripts/setup-signing.sh` - one-time signing certificate and update key on the release Mac.
 - `scripts/release.sh` - GitHub release with the zip, DMG, `appcast.xml` and `install.sh`.
+- In a restricted environment without macOS pasteboard/WebKit services, `CLEANPASTA_SKIP_PASTE_TESTS=1 scripts/test.sh` explicitly skips editor paste tests. This checks conversion and CLI behavior only; run the default suite on a normal Mac before release.
+- `CODE_SIGN_IDENTITY=- scripts/build-app.sh` builds an ad-hoc test package without querying the signing keychain. Release builds require the persistent signing certificate.
 - Plan and decisions: [docs/plan.md](docs/plan.md). Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ---

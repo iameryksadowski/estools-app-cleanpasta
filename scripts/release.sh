@@ -6,7 +6,7 @@ set -eu
 cd "$(dirname "$0")/.."
 REPO="iameryksadowski/estools-app-cleanpasta"
 [ -s Resources/sparkle-public-key.txt ] || { echo "Resources/sparkle-public-key.txt missing - run scripts/setup-signing.sh" >&2; exit 1; }
-./scripts/build-app.sh
+REQUIRE_SIGNING=1 ./scripts/build-app.sh
 VERSION="$(sed -n 's/^## \[\([0-9][0-9.]*\)\].*/\1/p' CHANGELOG.md | head -1)"
 BUILD="$(git rev-list --count HEAD)"
 ZIP="dist/Cleanpasta-$VERSION.zip"

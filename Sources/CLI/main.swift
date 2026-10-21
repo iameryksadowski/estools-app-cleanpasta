@@ -123,7 +123,9 @@ if let file, file != "-" {
     if kind == .auto { kind = ["md", "markdown"].contains(ext) ? .markdown : ["html", "htm"].contains(ext) ? .html : .text }
     assign(content)
 } else if !repair && (file == "-" || isatty(FileHandle.standardInput.fileDescriptor) == 0) {
-    assign(String(decoding: FileHandle.standardInput.readDataToEndOfFile(), as: UTF8.self))
+    let data = FileHandle.standardInput.readDataToEndOfFile()
+    guard let content = String(data: data, encoding: .utf8) else { fail("standard input is not valid UTF-8") }
+    assign(content)
 } else {
     let clipboard = Clipboard.read()
     switch kind {

@@ -22,7 +22,9 @@ function hasSwift(): boolean {
   }
 }
 
-const skip = process.platform !== "darwin" || !hasSwift() ? "needs macOS with swiftc" : false;
+const skip = process.env.CLEANPASTA_SKIP_PASTE_TESTS === "1"
+  ? "explicitly disabled: this environment cannot access the macOS pasteboard/WebKit services"
+  : process.platform !== "darwin" || !hasSwift() ? "needs macOS with swiftc" : false;
 
 function lab(): string {
   if (!existsSync(binary) || statSync(binary).mtimeMs < statSync(source).mtimeMs) {
@@ -104,3 +106,17 @@ test("Mail paste (modern WebKit): no typographic quotes left in the text, link a
   // WebKit keeps the spaces next to <b> and <a> as &nbsp; when it pastes
   assert.match(dom, /<b>"ważne"<\/b>( |&nbsp;)i( |&nbsp;)<a href="https:\/\/example\.com\/brief">"brief"<\/a>/);
 });
+
+// Synthetic source fixtures also go through an editor when macOS services are available.
+const auditSources = JSON.parse(fixture("audit/sources.json")) as { source: string; html: string; text: string }[];
+for (const source of auditSources) {
+  test(`Mail paste audit: ${source.source} keeps deep lists, tables and code lines`, { skip }, () => {
+    const result = cleanContent(source)!;
+    const dom = pasteIntoMail(result);
+    assert.match(dom, /Liść/);
+    assert.match(dom, /<table/);
+    assert.match(dom, /run\(\);/);
+    assert.match(dom, /done\(\);/);
+    assert.doesNotMatch(dom, /font-family: Menlo|background: rgb\(34/);
+  });
+}

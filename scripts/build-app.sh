@@ -11,18 +11,29 @@ BUILD="${BUILD:-$(git rev-list --count HEAD 2>/dev/null || echo 1)}"
 DIST="${DIST:-dist}"
 [ -n "$VERSION" ] || { echo "No version in CHANGELOG.md" >&2; exit 1; }
 APP="$DIST/Cleanpasta.app"
-IDENTITY="ES Tools Code Signing"
-security find-certificate -c "$IDENTITY" >/dev/null 2>&1 || IDENTITY="-"
+IDENTITY="${CODE_SIGN_IDENTITY:-ES Tools Code Signing}"
+if [ "$IDENTITY" != "-" ]; then
+  security find-certificate -c "$IDENTITY" >/dev/null 2>&1 || {
+    [ "${REQUIRE_SIGNING:-0}" != "1" ] || { echo "Release signing certificate not found: $IDENTITY" >&2; exit 1; }
+    IDENTITY="-"
+  }
+fi
+if [ "${REQUIRE_SIGNING:-0}" = "1" ] && [ "$IDENTITY" = "-" ]; then
+  echo "A release requires the ES Tools Code Signing identity; ad-hoc signing is not allowed." >&2
+  exit 1
+fi
 PUBLIC_KEY="$(cat Resources/sparkle-public-key.txt 2>/dev/null || true)"
 
 echo "Building Cleanpasta $VERSION ($BUILD)"
 # Universal binaries (Apple silicon + Intel): build both slices and join them.
 # Each slice gets its own build folder: SPM cannot switch triples in one.
+BUILD_LOG="$(mktemp)"
+trap 'rm -f "$BUILD_LOG"' EXIT
 for arch in arm64 x86_64; do
-  swift build -c release --triple $arch-apple-macosx14.0 --build-path .build/$arch >/dev/null 2>&1 || {
-    swift build -c release --triple $arch-apple-macosx14.0 --build-path .build/$arch 2>&1 | grep -E "error" | grep -v PlatformPath >&2
+  if ! swift build -c release --triple $arch-apple-macosx14.0 --build-path .build/$arch >"$BUILD_LOG" 2>&1; then
+    cat "$BUILD_LOG" >&2
     exit 1
-  }
+  fi
 done
 BIN="$(mktemp -d)"
 for tool in CleanpastaApp cleanpasta; do

@@ -1,0 +1,128 @@
+[
+  {
+    "source": "claude",
+    "html": "<div class=\"font-claude-response\" style=\"background:#222;color:white\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "chatgpt",
+    "html": "<article><div class=\"markdown prose\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></article>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "gmail",
+    "html": "<div dir=\"ltr\" style=\"font-family:Arial;color:red\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "slack",
+    "html": "<div class=\"p-rich_text_section\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "notion",
+    "html": "<div class=\"notion-page-content\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "google-docs",
+    "html": "<b id=\"docs-internal-guid-synthetic\" style=\"font-weight:normal\"><div><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></b>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "word",
+    "html": "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><style>.MsoNormal {color:red}</style></head><body><div class=\"WordSection1\"><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></div></body></html>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "whatsapp-web",
+    "html": "<div class=\"copyable-text\"><span><p><strong>Plan</strong> dla Żółwia 😊 za 30&nbsp;s.</p><p><a href=\"https://example.com/brief?a=1&amp;b=2\">Brief</a> i <code>x_y</code>.</p><p>Etapy:</p><ul><li>Rodzic<ol start=\"4\"><li>Dziecko<ul><li>Liść</li></ul></li></ol></li></ul><blockquote><p>Cytat</p></blockquote><table><tr><th>Etap</th><th>Dni</th></tr><tr><td>Start</td><td>2</td></tr></table><pre><code>if (ok) {\n  run();\n\n  done();\n}</code></pre><p>Koniec</p></span></div>",
+    "text": "Plan dla Żółwia 😊 za 30 s.",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  },
+  {
+    "source": "vscode-markdown",
+    "html": "<div style=\"font-family:Menlo;color:blue\">**Plan** dla Żółwia 😊 za 30 s.</div><div></div><div>[Brief](https://example.com/brief?a=1&amp;b=2) i `x_y`.</div><div></div><div>Etapy:</div><div>- Rodzic</div><div>  4. Dziecko</div><div>    - Liść</div><div></div><div>> Cytat</div><div></div><div>| Etap | Dni |</div><div>| --- | --- |</div><div>| Start | 2 |</div><div></div><div>```js</div><div>if (ok) {</div><div>  run();</div><div></div><div>  done();</div><div>}</div><div>```</div><div></div><div>Koniec</div>",
+    "text": "**Plan** dla Żółwia 😊 za 30 s.\n\n[Brief](https://example.com/brief?a=1&b=2) i `x_y`.\n\nEtapy:\n- Rodzic\n  4. Dziecko\n    - Liść\n\n> Cytat\n\n| Etap | Dni |\n| --- | --- |\n| Start | 2 |\n\n```js\nif (ok) {\n  run();\n\n  done();\n}\n```\n\nKoniec",
+    "contains": [
+      "Plan dla Żółwia 😊 za 30 s.",
+      "Brief i x_y.",
+      "- Rodzic\n  4. Dziecko\n    - Liść",
+      "Cytat",
+      "Etap\tDni\t\nStart\t2",
+      "if (ok) {\n  run();\n\n  done();\n}",
+      "Koniec"
+    ]
+  }
+]
