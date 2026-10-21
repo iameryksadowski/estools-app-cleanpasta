@@ -33,6 +33,9 @@ const contents: [string, { html?: string; text?: string }][] = [
   ["Mail message", { html: '<div style="font-size: 12px"><b>Plan</b></div><div><ul class="MailOutline"><li>one</li></ul></div>', text: "Plan\none" }],
 ];
 
+const auditSources = JSON.parse(fixture("audit/sources.json")) as { source: string; html: string; text: string }[];
+contents.push(...auditSources.map((source): [string, { html: string; text: string }] => [source.source, source]));
+
 for (const [label, opts, flags] of variants) {
   for (const [name, content] of contents) {
     test(`content: ${name} (${label})`, () => {
@@ -40,6 +43,11 @@ for (const [label, opts, flags] of variants) {
       writeFileSync(file, JSON.stringify(content));
       const actual = JSON.parse(cli([file, "--json-input", "--print", "json", ...flags]));
       assert.deepEqual(actual, cleanContent(content, opts));
+    });
+  }
+  for (const source of ["Use `**raw** _value_`", "```ts\n  run();\n\n---\n```", "3. A\n8. B\n2. C"]) {
+    test(`audit Markdown parity: ${JSON.stringify(source)} (${label})`, () => {
+      assert.deepEqual(JSON.parse(cli(["--markdown", "--print", "json", ...flags], source)), cleanMarkdown(source, opts));
     });
   }
   test(`markdown draft body (${label})`, () => {
