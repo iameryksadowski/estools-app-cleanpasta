@@ -23,6 +23,14 @@ curl -fsSL https://github.com/iameryksadowski/estools-app-cleanpasta/releases/la
 
 Or download the DMG from [Releases](https://github.com/iameryksadowski/estools-app-cleanpasta/releases/latest), drag Cleanpasta to Applications and allow it once in System Settings > Privacy & Security ("Open Anyway"). Then allow Accessibility when the app asks: Cleanpasta presses Cmd+V for you. Requires macOS 14 or later. Polish guide: [docs/instalacja.md](docs/instalacja.md).
 
+## Windows preview
+
+A Windows tray app and `cleanpasta.exe` CLI are being developed in the same repository, under `windows/`. They use Tauri 2 and an embedded QuickJS engine running the same converter bundle as macOS, without Node on the user's machine.
+
+Download the `cleanpasta-windows-x64-preview` artifact from a successful [Windows workflow run](https://github.com/iameryksadowski/estools-app-cleanpasta/actions/workflows/windows.yml). It contains a per-user NSIS installer and the CLI. This is an unsigned test build; SmartScreen or organizational policies may warn or block it. It is not a published release.
+
+Paste Clean defaults to Ctrl+Alt+Shift+V. The tray also offers Repair Clipboard, Settings, About and Quit. Settings include formatting, shortcuts, autostart and CLI installation to the user PATH. Signed updates require Eryk's public key and feed before release. Architecture, build commands, signing choices and the manual test checklist: [docs/windows.md](docs/windows.md).
+
 ## Command line and AI assistants
 
 Settings > General > Command line tool installs `cleanpasta`:

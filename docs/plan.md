@@ -205,3 +205,13 @@ Wydanie: 1.1.0. Sprzątanie na Macu Eryka: stare rozszerzenie Raycasta (do Kosza
 - [x] F8 Porządki ES Tools (`estools-docs` z historią brandu, Logo Export z historią z powrotem w swoim repo, rejestr nazw) - PR-y zmergowane
 - [x] F10 Cleanpasta (zmiana nazwy, listy numerowane, Raycast z ustawień, skróty do usunięcia, porządek) - 1.1.0, migracja z Clean Paste sprawdzona lokalnie
 - [ ] F9 Później
+
+
+### F-Windows. Tauri 2 and shared converter (2026-10-21)
+
+- Status: implementation preview in temporary `feature/windows`, PR to `development`; no release or merge authorized.
+- Architecture proposed for Eryk's acceptance: one product repository and shared history, native Swift stays at root, Windows app/CLI under `windows/`, common `Resources/convert.js` embedded in QuickJS through Rust core.
+- Core and CLI: exact 18-case TypeScript parity matrix, CLI flags and exit codes from `Sources/CLI/main.swift`, CF_HTML + Unicode clipboard, SendInput after modifiers release.
+- App: tray, editable shortcuts, nonfocusable HUD, branded settings, per-user autostart/PATH, deep links, updater with explicit install and public-key placeholder.
+- CI: Windows tests, release CLI and NSIS artifact; macOS core/CLI tests and Tauri check. Details and acceptance gates: [windows.md](windows.md).
+- Remaining release gates: architecture acceptance, manual Windows clipboard/focus tests, Eryk-generated Ed25519 key and update feed, decision on Authenticode signing. No keys or paid services provisioned.
