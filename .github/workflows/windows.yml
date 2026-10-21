@@ -1,0 +1,93 @@
+name: Windows
+on:
+  push:
+    branches: [feature/windows, development]
+    paths: ['windows/**', 'Resources/convert.js', 'converter/**', 'tests/parity.test.ts', '.github/workflows/windows.yml']
+  pull_request:
+    branches: [development, main]
+    paths: ['windows/**', 'Resources/convert.js', 'converter/**', 'tests/parity.test.ts', '.github/workflows/windows.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: windows-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  core-macos:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: windows
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install converter dependencies
+        working-directory: converter
+        run: pnpm install --frozen-lockfile --ignore-scripts
+        timeout-minutes: 3
+      - name: Check TypeScript parity oracle
+        run: node windows/scripts/generate-parity.mjs --check
+        timeout-minutes: 2
+      - name: Core, platform and CLI tests
+        run: cargo test --manifest-path windows/Cargo.toml --locked -p cleanpasta-core -p cleanpasta-platform -p cleanpasta-cli
+        timeout-minutes: 10
+      - name: Check Tauri on macOS
+        run: cargo check --manifest-path windows/Cargo.toml --locked -p cleanpasta-app
+        timeout-minutes: 10
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: windows
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install developer tools
+        run: pnpm install --frozen-lockfile --ignore-scripts
+        timeout-minutes: 3
+      - name: Install headless browser
+        run: pnpm exec playwright install chromium-headless-shell
+        timeout-minutes: 3
+      - name: Settings UI and screenshots
+        run: pnpm run test:ui
+        timeout-minutes: 2
+      - name: Core, platform and CLI tests
+        run: cargo test --locked -p cleanpasta-core -p cleanpasta-platform -p cleanpasta-cli
+        timeout-minutes: 10
+      - name: Build CLI
+        run: cargo build --locked --release -p cleanpasta-cli
+        timeout-minutes: 10
+      - name: Bundle CLI resource
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force app/binaries
+          Copy-Item target/release/cleanpasta.exe app/binaries/cleanpasta.exe
+        timeout-minutes: 1
+      - name: Build Tauri NSIS installer (unsigned preview)
+        run: pnpm run build
+        timeout-minutes: 20
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cleanpasta-windows-x64-preview
+          if-no-files-found: error
+          path: |
+            windows/target/release/bundle/nsis/*-setup.exe
+            windows/target/release/cleanpasta.exe
+            windows/test-results/*.png

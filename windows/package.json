@@ -1,0 +1,14 @@
+{
+  "name": "cleanpasta-windows-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:ui": "node scripts/ui-test.mjs",
+    "build": "cd app && tauri build --bundles nsis -- --locked",
+    "dev": "cd app && tauri dev"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "playwright": "1.64.1"
+  }
+}

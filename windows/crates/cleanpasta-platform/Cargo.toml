@@ -1,0 +1,15 @@
+[package]
+name = "cleanpasta-platform"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+cleanpasta-core = { path = "../cleanpasta-core" }
+serde.workspace = true
+serde_json.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+clipboard-win = "5"
+windows-sys = { version = "0.61", features = ["Win32_UI_Input_KeyboardAndMouse", "Win32_UI_WindowsAndMessaging"] }
+winreg = "0.55"

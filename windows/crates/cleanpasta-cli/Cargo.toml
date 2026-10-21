@@ -1,0 +1,14 @@
+[package]
+name = "cleanpasta-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "cleanpasta"
+path = "src/main.rs"
+
+[dependencies]
+cleanpasta-core = { path = "../cleanpasta-core" }
+cleanpasta-platform = { path = "../cleanpasta-platform" }
+serde_json.workspace = true
